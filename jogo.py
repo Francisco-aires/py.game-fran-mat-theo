@@ -2,6 +2,7 @@
 
 #---------- Impoprta e inicia pacotes
 import pygame
+
 import random
 
 pygame.init()
