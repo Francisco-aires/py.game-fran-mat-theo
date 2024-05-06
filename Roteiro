@@ -1,6 +1,18 @@
 Fazer o jogo comum
-    1 - Fazer os 'bricks'(1 adcionar o resto) definir a clase brick
-    2 - fazer a barrinha e a bolinha definir as clases barrinha e bolinha
-    3 - fazer a bolinha andar (criar funçao updete na classe bolinha)
-    4 - fazer a barrinha andar(criar funçao updete na classe barrinha)
-    5 - controlar a barrinha
+1 - Fazer os bricks (1 adcionar o resto) definir a clase brick
+2 - fazer classe bolinha
+2 - fazer a bolinha andar (criar funçao updete na classe bolinha)
+3 - fazer classe barrinha
+4 - fazer barrinha andar
+5 - Tratamento de colisões
+6 - adicionar sons 
+7 - refatorar o codigo(melhorar o codigo)
+8 - adicionar animaçao 
+9 - adicionando estados
+10 - adicionando placar
+11 - adicionando sistemas de vidas 
+12 - melhorando a colisao
+13 - separando codigo em + funçao
+14 - separando codigo em + arquivos
+15 - adicionando tela inicial(e outras fases)
+16 - telas finais e inicias
