@@ -1,0 +1,6 @@
+Fazer o jogo comum
+    1 - Fazer os 'bricks'(1 adcionar o resto) definir a clase brick
+    2 - fazer a barrinha e a bolinha definir as clases barrinha e bolinha
+    3 - fazer a bolinha andar (criar funçao updete na classe bolinha)
+    4 - fazer a barrinha andar(criar funçao updete na classe barrinha)
+    5 - controlar a barrinha
