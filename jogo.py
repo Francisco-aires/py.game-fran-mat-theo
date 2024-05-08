@@ -14,9 +14,9 @@ pygame.display.set_caption('BREAKOUT INSPER')
 
 
 # ------ Incia Assets
-BRICK_WIDTH=20
-BRICK_HEIGHT=10
-brick_img=pygame.image.load('').convert_alpha()
+BRICK_WIDTH=150
+BRICK_HEIGHT=100
+brick_img=pygame.image.load('Img/01-Breakout-Tiles.png').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 
@@ -49,7 +49,12 @@ while game:
             game = False
         
     # ----- Gera saídas
+    window.fill((255,255,255))
 
+
+    # ----- Desenhando Meteoros
+
+    window.blit(brick.image,brick.rect)
 
     # ----- Atualiza estado de jogo
     pygame.display.update()
