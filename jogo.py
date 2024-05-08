@@ -14,8 +14,8 @@ pygame.display.set_caption('BREAKOUT INSPER')
 
 
 # ------ Incia Assets
-BRICK_WIDTH=150
-BRICK_HEIGHT=100
+BRICK_WIDTH=50
+BRICK_HEIGHT=25
 brick_img=pygame.image.load('Img/01-Breakout-Tiles.png').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
@@ -30,8 +30,8 @@ class Brick(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = img
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, WIDTH-BRICK_WIDTH)
-        self.rect.y = random.randint(-250, 0)
+        self.rect.x = random.randint(0,WIDTH-BRICK_WIDTH)
+        self.rect.y = random.randint(0,250)
     # criar(função update(self)) se quiser movimentar o brick
 
 
