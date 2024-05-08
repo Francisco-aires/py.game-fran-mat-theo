@@ -16,7 +16,7 @@ pygame.display.set_caption('BREAKOUT INSPER')
 # ------ Incia Assets
 BRICK_WIDTH=20
 BRICK_HEIGHT=10
-brick_img=pygame.image.load('c:\Users\mizra\OneDrive - Insper - Institudo de Ensino e Pesquisa\Documentos\1-Semestre-Materias\DesignDeSoftware\Breakout Tile Set Free\PNG\02-Breakout-Tiles.png').convert_alpha()
+brick_img=pygame.image.load('').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 
