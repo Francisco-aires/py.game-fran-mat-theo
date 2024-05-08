@@ -33,6 +33,23 @@ class Brick(pygame.sprite.Sprite):
         self.rect.x = random.randint(0, WIDTH-BRICK_WIDTH)
         self.rect.y = random.randint(-250, 0)
     # criar(função update(self)) se quiser movimentar o brick
+class Ball(pygaem.sprite.Sprite):
+    def __init__(self, img):
+        pygame.sprite.Sprite.__init__(self)
+        self.rect = self.image.get_rect()
+        self.rect.x = 500
+        self.rect.y = 950
+        self.speedx = 0
+        self.speedy = 5
+    def update (self):
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+        if self.rect.right > WIDTH:
+            self.rect = WIDTH
+            self.speedx = -self.speedx
+        if self.rect.left < 0:
+            self.rect = 0
+            self.speedx = -self.speedx 
 
 
 game=True
