@@ -22,8 +22,8 @@ BAR_WIDHTH=100
 BAR_HEIGHT=25
 bar_img=pygame.image.load('').convert_alpha()
 bar_img=pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
-BALL_WIDHTH=100
-BALL_HEIGHT=25
+BALL_WIDHTH=20
+BALL_HEIGHT=20
 ball_img=pygame.image.load('').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
 
