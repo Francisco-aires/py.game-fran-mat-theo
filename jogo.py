@@ -15,9 +15,9 @@ pygame.display.set_caption('BREAKOUT INSPER')
 
 # ------ Incia Assets
 BRICK_WIDTH=20
-BRICK__HEIGHT=10
-brick_img=pygame.image.load('assets/img/meteorBrown_med1.png').convert_alpha()
-brick_img=pygame.transform.scale(brick_img, (METEOR_WIDTH, METEOR_HEIGHT))
+BRICK_HEIGHT=10
+brick_img=pygame.image.load('c:\Users\mizra\OneDrive - Insper - Institudo de Ensino e Pesquisa\Documentos\1-Semestre-Materias\DesignDeSoftware\Breakout Tile Set Free\PNG\02-Breakout-Tiles.png').convert_alpha()
+brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 
 
@@ -30,10 +30,16 @@ class Brick(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = img
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, WIDTH-METEOR_WIDTH)
-        self.rect.y = random.randint(-100, -METEOR_HEIGHT)
+        self.rect.x = random.randint(0, WIDTH-BRICK_WIDTH)
+        self.rect.y = random.randint(-250, 0)
+    # criar(função update(self)) se quiser movimentar o brick
+
 
 game=True
+
+
+#Criando Bricks
+brick=Brick(brick_img)
 #========loop principal========
 while game:
     # ----- Trata eventos
