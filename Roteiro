@@ -1,5 +1,14 @@
 Fazer o jogo comum
 1 - Fazer os bricks (1 adcionar o resto) definir a clase brick
+Bricks: 
+azul claro- quebra com 1 tiro
+Amarelo - 1 tiro quebra
+verde claro- 1 tiro quebra
+vermelho - 2 tiros quebram
+Roxo - 2 tiros + poderzinho (aleatório: Tiros duplos, múltiplas bolas, barra aumenta (por intervalo de tempo,bola fica devagar (intervalo de tempo e depois volta a velocidade incial), bolinha de ferro (quebra bloco qualquer bloco com 1 toque (menos o bloco cinza))))
+cinza - Inquebrável
+
+
 2 - fazer classe bolinha
 2 - fazer a bolinha andar (criar funçao updete na classe bolinha)
 3 - fazer classe barrinha
