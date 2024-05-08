@@ -18,10 +18,12 @@ BRICK_WIDTH=50
 BRICK_HEIGHT=25
 brick_img=pygame.image.load('Img/01-Breakout-Tiles.png').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
+
 BAR_WIDHTH=100
 BAR_HEIGHT=25
 bar_img=pygame.image.load('').convert_alpha()
 bar_img=pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
+
 BALL_WIDHTH=20
 BALL_HEIGHT=20
 ball_img=pygame.image.load('').convert_alpha()
