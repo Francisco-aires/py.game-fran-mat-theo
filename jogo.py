@@ -22,6 +22,9 @@ brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 
 #---------- Inicia estrutura de dados
+#lista posições bricks
+lista_x=[]
+lista_y=[]
 #definindo os novos tipos
 
 class Brick(pygame.sprite.Sprite):
@@ -33,13 +36,19 @@ class Brick(pygame.sprite.Sprite):
         self.rect.x = random.randint(0,WIDTH-BRICK_WIDTH)
         self.rect.y = random.randint(0,250)
     # criar(função update(self)) se quiser movimentar o brick
+    def update(self):
+        self.rect.x=self.rect.x  #  ((compoletar função update))
 
 
 game=True
 
+#criando grupo Bricks
+all_bricks=pygame.sprite.Group()
 
-#Criando Bricks
-brick=Brick(brick_img)
+#Criando os Bricks
+for i in range(25):
+    brick=Brick(brick_img)
+    all_bricks.add(brick)
 #========loop principal========
 while game:
     # ----- Trata eventos
@@ -47,18 +56,17 @@ while game:
         # ----- Verifica consequências
         if event.type == pygame.QUIT:
             game = False
-        
+
+
+    # ----- Atualiza estado de jogo
+
     # ----- Gera saídas
     window.fill((255,255,255))
 
-
-    # ----- Desenhando Meteoros
-
-    window.blit(brick.image,brick.rect)
-
-    # ----- Atualiza estado de jogo
-    pygame.display.update()
-
+     # ----- Desenhando bricks
+    all_bricks.draw(window) 
+    
+    pygame.display.update() # mostra o novo frame para o jogador
 #======Finalização=======
 pygame.quit()
 
