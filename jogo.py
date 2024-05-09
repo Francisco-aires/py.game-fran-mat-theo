@@ -22,7 +22,8 @@ brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 BAR_WIDHTH=100
 BAR_HEIGHT=25
 bar_img=pygame.image.load('').convert_alpha()
-bar_img=pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
+bar_img = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
+
 
 BALL_WIDHTH=20
 BALL_HEIGHT=20
@@ -100,6 +101,9 @@ all_bricks=pygame.sprite.Group()
 for i in range(25):
     brick=Brick(brick_img)
     all_bricks.add(brick)
+
+#Barrinha criada
+bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
 #========loop principal========
 while game:
     # ----- Trata eventos
