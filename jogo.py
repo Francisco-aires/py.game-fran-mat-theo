@@ -51,7 +51,7 @@ class Brick(pygame.sprite.Sprite):
         self.rect.x=self.rect.x  #  ((compoletar função update))
 
 
-class Ball(pygaem.sprite.Sprite):
+class Ball(pygame.sprite.Sprite):
     def __init__(self, img):
         pygame.sprite.Sprite.__init__(self)
         self.rect = self.image.get_rect()
