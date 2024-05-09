@@ -21,13 +21,13 @@ brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 BAR_WIDHTH=100
 BAR_HEIGHT=25
-bar_img=pygame.image.load('').convert_alpha()
+bar_img=pygame.image.load('Img/17-Breakout-Tiles.png').convert_alpha()
 bar_img = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
 
 
 BALL_WIDHTH=20
 BALL_HEIGHT=20
-ball_img=pygame.image.load('').convert_alpha()
+ball_img=pygame.image.load('Img/12-Breakout-Tiles.png').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
 
 
@@ -79,19 +79,24 @@ class Bar(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speedx = 0
+        self.real_x = x  # pra barrinha ir mais devagar
     
     def update(self, keys):
         self.speedx = 0  # Reseta a velocidade cada vez que o update é chamado para evitar movimento contínuo
         if keys[pygame.K_LEFT]:
-            self.speedx = -5
+            self.speedx = -0.5
         if keys[pygame.K_RIGHT]:
-            self.speedx = 5
-        self.rect.x += self.speedx
+            self.speedx = 0.5
+        self.real_x += self.speedx
+        self.rect.x = int(self.real_x) #tranformar em numero inteiro
+
         # Mantém a barra dentro da tela
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
+            self.real_x = self.rect.x # sintonizar com a posicao real
         if self.rect.left < 0:
             self.rect.left = 0
+            self.real_x = self.rect.x # sintonizar com a posicao real
 game=True
 
 #criando grupo Bricks
