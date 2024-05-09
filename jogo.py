@@ -55,18 +55,19 @@ class Brick(pygame.sprite.Sprite):
 class Ball(pygame.sprite.Sprite):
     def __init__(self, img):
         pygame.sprite.Sprite.__init__(self)
+        self.image = img  # Define a imagem da bola
         self.rect = self.image.get_rect()
         self.rect.x = 500
         self.rect.y = 950
         self.speedx = 0
-        self.speedy = 5
+        self.speedy = -5  # Velocidade negativa para mover a bola para cima inicialmente
     def update (self):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
-        if self.rect.right > WIDTH:
+        if self.rect.right > WIDTH or self.rect.left < 0:
             self.rect = WIDTH
             self.speedx = -self.speedx
-        if self.rect.left < 0:
+        if self.rect.left < 0 or self.rect.bottom > HEIGHT:
             self.rect = 0
             self.speedx = -self.speedx 
 
@@ -109,6 +110,10 @@ for i in range(25):
 
 #Barrinha criada
 bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
+
+#bolinhaaaaaaaaaaaaaa
+ball = Ball(ball_img)
+
 #========loop principal========
 while game:
     # ----- Trata eventos
