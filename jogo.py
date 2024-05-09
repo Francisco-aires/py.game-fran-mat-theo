@@ -58,18 +58,19 @@ class Ball(pygame.sprite.Sprite):
         self.image = img  # Define a imagem da bola
         self.rect = self.image.get_rect()
         self.rect.x = 500
-        self.rect.y = 950
-        self.speedx = 0
-        self.speedy = -5  # Velocidade negativa para mover a bola para cima inicialmente
+        self.rect.y = 250
+        self.speedx = 1
+        self.speedy = 0  # Velocidade negativa para mover a bola para cima inicialmente
     def update (self):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
+        # Rebate no teto
         if self.rect.right > WIDTH or self.rect.left < 0:
-            self.rect = WIDTH
             self.speedx = -self.speedx
-        if self.rect.left < 0 or self.rect.bottom > HEIGHT:
-            self.rect = 0
-            self.speedx = -self.speedx 
+        # Rebate a bola na borda superior
+        if self.rect.top < 0:
+            self.speedy = -self.speedy
+        # nao sei o que fazer no chao
 
 
 class Bar(pygame.sprite.Sprite):
@@ -129,13 +130,14 @@ while game:
     # ----- Atualiza estado de jogo
     all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
     bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
+    ball.update() #bolinha movendoo
 
     # ----- Gera saídas
     window.fill((255,255,255))
     # esta linha é para desenhar a barra
     window.blit(bar.image, bar.rect)
-    # Adicione aqui o desenho da bola
-
+    # Adicione aqui o desenho da bola # adcionei
+    window.blit(ball.image, ball.rect) 
     # ----- Desenhando bricks
     all_bricks.draw(window) 
     
