@@ -108,17 +108,25 @@ bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50)
 while game:
     # ----- Trata eventos
     for event in pygame.event.get():
+
         # ----- Verifica consequências
         if event.type == pygame.QUIT:
             game = False
 
+    # Captura as teclas pressionadas uma vez por frame
+    keys = pygame.key.get_pressed()
 
     # ----- Atualiza estado de jogo
+    all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
+    bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
 
     # ----- Gera saídas
     window.fill((255,255,255))
+    # esta linha é para desenhar a barra
+    window.blit(bar.image, bar.rect)
+    # Adicione aqui o desenho da bola
 
-     # ----- Desenhando bricks
+    # ----- Desenhando bricks
     all_bricks.draw(window) 
     
     pygame.display.update() # mostra o novo frame para o jogador
