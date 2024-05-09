@@ -49,6 +49,8 @@ class Brick(pygame.sprite.Sprite):
     # criar(função update(self)) se quiser movimentar o brick
     def update(self):
         self.rect.x=self.rect.x  #  ((compoletar função update))
+
+
 class Ball(pygaem.sprite.Sprite):
     def __init__(self, img):
         pygame.sprite.Sprite.__init__(self)
@@ -68,6 +70,27 @@ class Ball(pygaem.sprite.Sprite):
             self.speedx = -self.speedx 
 
 
+class Bar(pygame.sprite.Sprite):
+    def __init__(self, img, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speedx = 0
+    
+    def update(self, keys):
+        self.speedx = 0  # Reseta a velocidade cada vez que o update é chamado para evitar movimento contínuo
+        if keys[pygame.K_LEFT]:
+            self.speedx = -5
+        if keys[pygame.K_RIGHT]:
+            self.speedx = 5
+        self.rect.x += self.speedx
+        # Mantém a barra dentro da tela
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
 game=True
 
 #criando grupo Bricks
