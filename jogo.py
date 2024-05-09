@@ -59,11 +59,18 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 500
         self.rect.y = 250
-        self.speedx = 1
-        self.speedy = 0  # Velocidade negativa para mover a bola para cima inicialmente
+        self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
+        self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
+        self.speedx = 0 # velocidade inicial
+        self.speedy = 0.15  # Velocidade negativa para mover a bola para cima inicialmente
+
     def update (self):
-        self.rect.x += self.speedx
-        self.rect.y += self.speedy
+        # Atualiza as posições reais com as velocidades
+        self.real_x += self.speedx
+        self.real_y += self.speedy
+        # Atualiza as posições do retângulo com valores inteiros
+        self.rect.x = int(self.real_x)
+        self.rect.y = int(self.real_y)        
         # Rebate no teto
         if self.rect.right > WIDTH or self.rect.left < 0:
             self.speedx = -self.speedx
@@ -71,7 +78,8 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.speedy = -self.speedy
         # nao sei o que fazer no chao
-
+        if self.rect.bottom > HEIGHT: # por enquanto ta rebatendo
+            self.speedy = -self.speedy
 
 class Bar(pygame.sprite.Sprite):
     def __init__(self, img, x, y):
