@@ -29,7 +29,12 @@ BALL_WIDHTH=20
 BALL_HEIGHT=20
 ball_img=pygame.image.load('Img/58-Breakout-Tiles.png').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
-
+POWER_WIDGTH = 20
+POWER_HEIGHT = 20
+dic_power = {}
+for i in range(41, 49):
+    dic_power["Poder {0}".format(i)] = pygame.image.load('Img/{0}-Breakout-Tiles.png'.format(i)).convert_alpha()
+    dic_power["Poder {0}".format(i)] = pygame.transform.scale(dic_power["Poder {0}".format(i)], (POWER_WIDGTH, POWER_HEIGHT))
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
     running = True
