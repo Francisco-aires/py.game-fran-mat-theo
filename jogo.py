@@ -45,11 +45,11 @@ def tela_inicio(window):
         font = pygame.font.Font(None, 36)  # Define a fonte
 
         # Cria um texto de boas-vindas
-        texto_inicio = font.render('Bem-vindo ao BREAKOUT INSPER!', True, (255, 255, 255))
+        texto_inicio = font.render('Bem-vindo ao BREAKOUT INSPER!', True, ((255, 255, 255)))
         inicio_rect = texto_inicio.get_rect(center=(WIDTH / 2, HEIGHT / 3))
 
         # Cria um texto de instrução
-        instrucao = font.render('Pressione qualquer tecla para começar', True, (255, 255, 255))
+        instrucao = font.render('Pressione qualquer tecla para começar', True, ((255, 255, 255)))
         instrucao_rect = instrucao.get_rect(center=(WIDTH / 2, HEIGHT / 2))
 
         # Desenha os textos na tela
@@ -72,11 +72,11 @@ def tela_fim(window):
         font = pygame.font.Font(None, 36)  # Define a fonte
 
         # Cria um texto de Game Over
-        texto_fim = font.render('GAME OVER', True, (255, 0, 0))
+        texto_fim = font.render('GAME OVER', True, ((255, 0, 0)))
         fim_rect = texto_fim.get_rect(center=(WIDTH / 2, HEIGHT / 3))
 
         # Cria um texto de instrução
-        instrucao = font.render('Pressione qualquer tecla para recomeçar', True, (255, 255, 255))
+        instrucao = font.render('Pressione qualquer tecla para recomeçar', True, ((255, 255, 255)))
         instrucao_rect = instrucao.get_rect(center=(WIDTH / 2, HEIGHT / 2))
 
         # Desenha os textos na tela
@@ -134,10 +134,11 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 500
         self.rect.y = 250
+        self.mask = pygame.mask.from_surface(self.image)
         self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
         self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
         self.speedx = 0 # velocidade inicial
-        self.speedy = 0.15  # Velocidade negativa para mover a bola para cima inicialmente
+        self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
         self.condicao_hit_ball_bar=0
 
     def update (self):
@@ -175,9 +176,9 @@ class Bar(pygame.sprite.Sprite):
     def update(self, keys):
         self.speedx = 0  # Reseta a velocidade cada vez que o update é chamado para evitar movimento contínuo
         if keys[pygame.K_LEFT]:
-            self.speedx = -0.5
+            self.speedx = -5
         if keys[pygame.K_RIGHT]:
-            self.speedx = 0.5
+            self.speedx = 5
         self.real_x += self.speedx
         self.rect.x = int(self.real_x) #tranformar em numero inteiro
 
@@ -188,6 +189,8 @@ class Bar(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
             self.real_x = self.rect.x # sintonizar com a posicao real
+
+
 class Powers(pygame.sprite.Sprite):
     def __init__(self, power_img, center, bottom):
         pygame.sprite.Sprite.__init__(self)
@@ -202,12 +205,14 @@ class Powers(pygame.sprite.Sprite):
             self.kill() # Apaga o sprite do poder caso ele saia da tela
     def power_up(self, power_numbers):
         power = power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
+        a=0
         if power == 1:
-            a = 1
+            a=1
         if power == 2:
-            a = 2
+            a=2
         if power == 3:
-            a = 3
+            a=3
+
 
 
 
@@ -241,9 +246,15 @@ tela_inicio(window)
 
 # Inicia a reprodução da música de fundo em loop
 pygame.mixer.music.play(-1)
+
+# Variável que ajusta velocidde[
+clock = pygame.time.Clock()
+FPS = 60
+
 #========loop principal========
 while game:
 
+    clock.tick(FPS)
     # ----- Trata eventos
     for event in pygame.event.get():
 
@@ -263,7 +274,7 @@ while game:
 
     #verifica se houve colisão
     # colizao da bolinha X bloco
-    hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True)
+    hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
     # colizao com o bloco inverte a bola
     for ball, bricks_hit in hits_ball_brick.items():
         brick = bricks_hit[0]  # Pega o primeiro tijolo atingido
@@ -292,7 +303,7 @@ while game:
                 ball.speedx = -ball.speedx
 
     # colizao da barrinha X bolinha
-    hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False)
+    hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
     if len(hits_ball_bar)> ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
         ball.speedx=bar.speedx
