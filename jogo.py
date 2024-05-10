@@ -294,10 +294,10 @@ while game:
                 # Se a velocidade y for positiva, a bola está indo para baixo, caso contrário, está indo para cima
                 if ball.speedy > 0:
                     # Se a bola estiver indo para baixo, inverta sua velocidade y
-                    ball.speedy = -5
+                    ball.speedy = - ball.speedy
                 else:
                     # Se a bola estiver indo para cima, inverta sua velocidade x
-                    ball.speedx = -5
+                    ball.speedx = - ball.speedx
             else:
                 # A colisão é mais provavelmente lateral
                 ball.speedx = -ball.speedx
