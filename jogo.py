@@ -7,8 +7,8 @@ import random
 pygame.init()
 
 #---------- Gera tela principal
-WIDTH=1000
-HEIGHT=500
+WIDTH=850
+HEIGHT=600
 window = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption('BREAKOUT INSPER')
 
@@ -35,8 +35,9 @@ ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
 
 #---------- Inicia estrutura de dados
 #lista posições bricks
-lista_x=[]
-lista_y=[]
+lista_x=[10,70,130,190,250,310,370,430,490,550,610,670,730,790,]
+lista_y=[5,35,65,95,125,155,185,215,245]
+lista_bricks=[]#lista com a posição de todos os blocos
 #definindo os novos tipos
 
 class Brick(pygame.sprite.Sprite):
@@ -45,8 +46,21 @@ class Brick(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = img
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0,WIDTH-BRICK_WIDTH)
-        self.rect.y = random.randint(0,250)
+        condicao=True
+        while condicao:
+            lista_par=[] #lista com as coordenadas do brick para verificar se essa esta livre
+            x= random.choice(lista_x)
+            y=random.choice(lista_y)
+            lista_par.append(x)
+            lista_par.append(y)
+            if lista_par in lista_bricks:   #Modificar caso já esteja lotado
+                condicao=True
+            else:
+                condicao=False
+                lista_bricks.append(lista_par)
+  
+        self.rect.x = x
+        self.rect.y = y
     # criar(função update(self)) se quiser movimentar o brick
     def update(self):
         self.rect.x=self.rect.x  #  ((compoletar função update))
@@ -63,6 +77,7 @@ class Ball(pygame.sprite.Sprite):
         self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
         self.speedx = 0 # velocidade inicial
         self.speedy = 0.15  # Velocidade negativa para mover a bola para cima inicialmente
+        self.condicao_hit_ball_bar=0
 
     def update (self):
         # Atualiza as posições reais com as velocidades
@@ -80,6 +95,8 @@ class Ball(pygame.sprite.Sprite):
         # nao sei o que fazer no chao
         if self.rect.bottom > HEIGHT: # por enquanto ta rebatendo
             self.speedy = -self.speedy
+        
+
 
 class Bar(pygame.sprite.Sprite):
     def __init__(self, img, x, y):
@@ -110,18 +127,26 @@ class Bar(pygame.sprite.Sprite):
 game=True
 
 #criando grupo Bricks
+all_sprites = pygame.sprite.Group()
 all_bricks=pygame.sprite.Group()
+all_balls=pygame.sprite.Group()
 
 #Criando os Bricks
-for i in range(25):
+for i in range(100):
     brick=Brick(brick_img)
     all_bricks.add(brick)
+    all_sprites.add(brick)
 
 #Barrinha criada
 bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
+all_sprites.add(bar)
+
+condicao_hit_ball_bar=0
 
 #bolinhaaaaaaaaaaaaaa
 ball = Ball(ball_img)
+all_sprites.add(ball)
+all_balls.add(ball)
 
 #========loop principal========
 while game:
@@ -136,12 +161,23 @@ while game:
     keys = pygame.key.get_pressed()
 
     # ----- Atualiza estado de jogo
+
+    #atualiza posições (barra e bola)
     all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
     bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
     ball.update() #bolinha movendoo
 
+    #verifica se houve colisão
+    hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True)
+
+    hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False)
+    if len(hits_ball_bar)> ball.condicao_hit_ball_bar:
+            ball.speedy=-ball.speedy
+            ball.speedx=bar.speedx
+
+
     # ----- Gera saídas
-    window.fill((255,255,255))
+    window.fill((0,0,0))
     # esta linha é para desenhar a barra
     window.blit(bar.image, bar.rect)
     # Adicione aqui o desenho da bola # adcionei
