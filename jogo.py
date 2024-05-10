@@ -68,10 +68,10 @@ def tela_fim(window):
             if event.type == pygame.KEYDOWN:
                 running = False
 
-        window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
+        window.fill((0, 0, 0))  # Define a cor de fundo da tela de Game Over
         font = pygame.font.Font(None, 36)  # Define a fonte
 
-        # Cria um texto de boas-vindas
+        # Cria um texto de Game Over
         texto_fim = font.render('GAME OVER', True, (255, 0, 0))
         fim_rect = texto_fim.get_rect(center=(WIDTH / 2, HEIGHT / 3))
 
@@ -191,17 +191,17 @@ class Bar(pygame.sprite.Sprite):
 class Powers(pygame.sprite.Sprite):
     def __init__(self, power_img, center, bottom):
         pygame.sprite.Sprite.__init__(self)
-        self.image = random.choice(power_img)
+        self.image = random.choice(power_img) # Escolhe qual dos poderes será usado
         self.rect = self.image.get_rect()
         self.rect.centerx = center
         self.rect.bottom = bottom
         self.speedy = 5
     def update(self):
-        self.rect.y += self.speedy
+        self.rect.y += self.speedy # Atualiza o poder com sua velocidade padrão
         if self.rect.bottom < 0:
-            self.kill()
+            self.kill() # Apaga o sprite do poder caso ele saia da tela
     def power_up(self, power_numbers):
-        power = power_numbers[self.image]
+        power = power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
         if power == 1:
 
         if power == 2:
