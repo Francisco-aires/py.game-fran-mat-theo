@@ -11,11 +11,11 @@ Roxo - 2 tiros + poderzinho (aleatório: Tiros duplos, múltiplas bolas, barra a
 cinza - Inquebrável
 
 
-2 - fazer classe bolinha
+2 - fazer classe bolinha ()
 2 - fazer a bolinha andar (criar funçao updete na classe bolinha)
 3 - fazer classe barrinha
 4 - fazer barrinha andar
-5 - Tratamento de colisões
+5 - Tratamento de colisões (precisa melhorar para bola + bricks (bater em uma e mudar de velocidade) melhorar bola+ barra (bola esta bugando quando pega do lado da barra, precisa consertar isso rect.side?))
 6 - adicionar sons 
 7 - refatorar o codigo(melhorar o codigo)
 8 - adicionar animaçao 
