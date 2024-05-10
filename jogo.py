@@ -277,7 +277,22 @@ while game:
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
     # colizao com o bloco inverte a bola
     for ball, bricks_hit in hits_ball_brick.items():
-        brick = bricks_hit[0]  # Pega o primeiro tijolo atingido
+        if len(bricks_hit)==1:
+            brick = bricks_hit[0]  # Pega o primeiro tijolo atingido
+        
+        if len(bricks_hit)==2:
+            brick=bricks_hit[0]
+            ball_center = ball.rect.centerx
+            brick_center = brick.rect.centerx
+
+            #verifia se a colisão foi diferente
+            if abs(ball_center - brick_center) < brick.rect.width / 2:
+                # A colisão é mais provavelmente superior ou inferior
+                ball.speedy = -ball.speedy
+            else:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
+            brick=bricks_hit[1]
 
         # Verifica se a colisão foi mais lateral do que superior/inferior
         # Comparando o centro da bola com o centro do tijolo
