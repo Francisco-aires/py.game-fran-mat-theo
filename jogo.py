@@ -171,13 +171,30 @@ while game:
     ball.update() #bolinha movendoo
 
     #verifica se houve colisão
-    # colizao da bolinha X barrinha
+    # colizao da bolinha X bloco
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True)
+    # colizao com o bloco inverte a bola
+    for ball, bricks_hit in hits_ball_brick.items():
+        brick = bricks_hit[0]  # Pega o primeiro tijolo atingido
+
+        # Verifica se a colisão foi mais lateral do que superior/inferior
+        # Comparando o centro da bola com o centro do tijolo
+        ball_center = ball.rect.centerx
+        brick_center = brick.rect.centerx
+
+        # Verifica se a colisão foi mais lateral
+        if abs(ball_center - brick_center) < brick.rect.width / 2:
+            # A colisão é mais provavelmente superior ou inferior
+            ball.speedy = -ball.speedy
+        else:
+            # A colisão é mais provavelmente lateral
+            ball.speedx = -ball.speedx
+
     # colizao da barrinha X bolinha
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False)
     if len(hits_ball_bar)> ball.condicao_hit_ball_bar:
-            ball.speedy = -abs(ball.speedy)
-            ball.speedx=bar.speedx
+        ball.speedy = -abs(ball.speedy)
+        ball.speedx=bar.speedx
 
     # ----- Gera saídas
     window.fill((0,0,0))
