@@ -203,11 +203,11 @@ class Powers(pygame.sprite.Sprite):
     def power_up(self, power_numbers):
         power = power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
         if power == 1:
-
+            a = 1
         if power == 2:
-
+            a = 2
         if power == 3:
-
+            a = 3
 
 
 
@@ -278,8 +278,18 @@ while game:
             # A colisão é mais provavelmente superior ou inferior
             ball.speedy = -ball.speedy
         else:
-            # A colisão é mais provavelmente lateral
-            ball.speedx = -ball.speedx
+            if brick.rect.y < ball.rect.centery < brick.rect.y + brick.rect.height:
+                # Se a bola estiver entre duas fileiras, determine a direção da bola
+                # Se a velocidade y for positiva, a bola está indo para baixo, caso contrário, está indo para cima
+                if ball.speedy > 0:
+                    # Se a bola estiver indo para baixo, inverta sua velocidade y
+                    ball.speedy = -ball.speedy
+                else:
+                    # Se a bola estiver indo para cima, inverta sua velocidade x
+                    ball.speedx = -ball.speedx
+            else:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
 
     # colizao da barrinha X bolinha
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False)
