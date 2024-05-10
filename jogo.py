@@ -27,7 +27,7 @@ bar_img = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
 
 BALL_WIDHTH=20
 BALL_HEIGHT=20
-ball_img=pygame.image.load('Img/12-Breakout-Tiles.png').convert_alpha()
+ball_img=pygame.image.load('Img/58-Breakout-Tiles.png').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
 
 # telinhaaaa de inicio funçao
