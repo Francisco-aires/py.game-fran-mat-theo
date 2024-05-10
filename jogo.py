@@ -161,6 +161,30 @@ class Bar(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
             self.real_x = self.rect.x # sintonizar com a posicao real
+class Powers(pygame.sprite.Sprite):
+    def __init__(self, power_img, center, bottom):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = random.choice(power_img)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = center
+        self.rect.bottom = bottom
+        self.speedy = 5
+    def update(self):
+        self.rect.y += self.speedy
+        if self.rect.bottom < 0:
+            self.kill()
+    def power_up(self, power_numbers):
+        power = power_numbers[self.image]
+        if power == 1:
+
+        if power == 2:
+
+        if power == 3:
+
+
+
+
+
 game=True
 
 #criando grupo Bricks
