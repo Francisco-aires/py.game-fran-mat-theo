@@ -58,7 +58,12 @@ def tela_inicio(window):
 
         pygame.display.update()  # Atualiza a tela para mostrar os textos
 
+############### carregar sons #####################
+# Carrega o som de colisão
+#som_colisao = pygame.mixer.Sound('caminho/para/som_colisao.wav')
 
+# Carrega a música de fundo
+pygame.mixer.music.load('sons/name.mp3')
 
 
 #---------- Inicia estrutura de dados
@@ -181,8 +186,12 @@ all_balls.add(ball)
 
 
 tela_inicio(window)
+
+# Inicia a reprodução da música de fundo em loop
+pygame.mixer.music.play(-1)
 #========loop principal========
 while game:
+
     # ----- Trata eventos
     for event in pygame.event.get():
 
