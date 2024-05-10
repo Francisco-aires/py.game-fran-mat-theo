@@ -60,7 +60,8 @@ def tela_inicio(window):
 
 ############### carregar sons #####################
 # Carrega o som de colisão
-#som_colisao = pygame.mixer.Sound('caminho/para/som_colisao.wav')
+som_colisao = pygame.mixer.Sound('sons/somco.mp3')
+#        som_colisao.play() se quiser tocar
 
 # Carrega a música de fundo
 pygame.mixer.music.load('sons/name.mp3')
