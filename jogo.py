@@ -93,7 +93,7 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.speedy = -self.speedy
         # nao sei o que fazer no chao
-        if self.rect.bottom > HEIGHT: # por enquanto ta rebatendo
+        if self.rect.bottom > HEIGHT: # teleportando pro inicio
             self.rect.x = 500
             self.rect.y = 250
             self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
