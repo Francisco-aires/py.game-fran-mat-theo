@@ -168,13 +168,13 @@ while game:
     ball.update() #bolinha movendoo
 
     #verifica se houve colisão
+    # colizao da bolinha X barrinha
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True)
-
+    # colizao da barrinha X bolinha
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False)
     if len(hits_ball_bar)> ball.condicao_hit_ball_bar:
             ball.speedy=-ball.speedy
             ball.speedx=bar.speedx
-
 
     # ----- Gera saídas
     window.fill((0,0,0))
