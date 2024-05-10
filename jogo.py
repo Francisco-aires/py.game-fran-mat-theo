@@ -19,7 +19,7 @@ BRICK_HEIGHT=25
 brick_img=pygame.image.load('Img/01-Breakout-Tiles.png').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
-BAR_WIDHTH=100
+BAR_WIDHTH=200
 BAR_HEIGHT=25
 bar_img=pygame.image.load('Img/17-Breakout-Tiles.png').convert_alpha()
 bar_img = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
@@ -181,9 +181,9 @@ class Bar(pygame.sprite.Sprite):
     def update(self, keys):
         self.speedx = 0  # Reseta a velocidade cada vez que o update é chamado para evitar movimento contínuo
         if keys[pygame.K_LEFT]:
-            self.speedx = -5
+            self.speedx = -7
         if keys[pygame.K_RIGHT]:
-            self.speedx = 5
+            self.speedx = 7
         self.real_x += self.speedx
         self.rect.x = int(self.real_x) #tranformar em numero inteiro
 
@@ -254,7 +254,7 @@ pygame.mixer.music.play(-1)
 
 # Variável que ajusta velocidde[
 clock = pygame.time.Clock()
-FPS = 60
+FPS = 30
 
 #========loop principal========
 while game:
@@ -291,7 +291,7 @@ while game:
             brick_center = brick.rect.centerx
 
             #verifia se a colisão foi diferente
-            if abs(ball_center - brick_center) < brick.rect.width / 2:
+            if abs(ball_center - brick_center) <= brick.rect.width / 2:
                 # A colisão é mais provavelmente superior ou inferior
                 ball.speedy = -ball.speedy
             else:
@@ -305,28 +305,22 @@ while game:
         brick_center = brick.rect.centerx
 
         # Verifica se a colisão foi mais lateral
-        if abs(ball_center - brick_center) < brick.rect.width / 2:
+        if abs(ball_center - brick_center) <= brick.rect.width / 2:
             # A colisão é mais provavelmente superior ou inferior
             ball.speedy = -ball.speedy
+    
         else:
-            if brick.rect.y < ball.rect.centery < brick.rect.y + brick.rect.height:
-                # Se a bola estiver entre duas fileiras, determine a direção da bola
-                # Se a velocidade y for positiva, a bola está indo para baixo, caso contrário, está indo para cima
-                if ball.speedy > 0:
-                    # Se a bola estiver indo para baixo, inverta sua velocidade y
-                    ball.speedy = - ball.speedy
-                else:
-                    # Se a bola estiver indo para cima, inverta sua velocidade x
-                    ball.speedx = - ball.speedx
-            else:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
+            # A colisão é mais provavelmente lateral
+            ball.speedx = -ball.speedx
 
     # colizao da barrinha X bolinha
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
-    if len(hits_ball_bar)> ball.condicao_hit_ball_bar:
+    if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
-        ball.speedx=bar.speedx
+        if bar.speedx>0:
+            ball.speedx=bar.speedx-2
+        if bar.speedx<0:
+            ball.speex=bar.speedx+2
 
     # ----- Gera saídas
     window.fill((0,0,0))
