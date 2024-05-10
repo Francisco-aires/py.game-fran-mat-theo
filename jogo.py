@@ -214,23 +214,23 @@ class Powers(pygame.sprite.Sprite):
     def power_up(self, dic_power_numbers):
         power = dic_power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
         if power == 41:
-            FPS = 45
+            FPS = 45 # Poder que deixa o jogo mais lento
         if power == 42:
-            FPS = 75
+            FPS = 75 # Poder que deixa o jogo mais rápido
         if power == 43:
             for i in range(2):
-                ball = Ball(ball_img)
+                ball = Ball(ball_img) # Poder que adiciona mais duas bolas ao jogo
                 all_sprites.add(ball)
                 all_balls.add(ball)
         if power == 44:
             for bricks in all_bricks:
-                pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)            
+                pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask) # Poder que deixa a bola forte           
         if power == 45:
-            pygame.sprite.groupcollide(all_balls, all_bricks, False, False, pygame.sprite.collide_mask)
+            pygame.sprite.groupcollide(all_balls, all_bricks, False, False, pygame.sprite.collide_mask) # Poder que deixa a bola fraca
         if power == 46:
-            BAR_WIDHTH=175
+            BAR_WIDHTH=175 # Poder que diminui a barra 
         if power == 47:
-            BAR_WIDHTH=225
+            BAR_WIDHTH=225 # Poder que expande a barra
 
 
 
