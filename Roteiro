@@ -18,7 +18,7 @@ cinza - Inquebrável
 5 - Tratamento de colisões
 
 (precisa melhorar para bola + bricks (bater em uma e mudar de velocidade) melhorar bola+ barra (bola esta bugando quando pega do lado da barra, precisa consertar isso rect.side?)) + aumentar a velocidade da bolinha   (fazer que nem o google breakout, a partir de 10 colisões barra bolinha aumenta a velocidade, quando a bola renasce essa volta pra velocidade inicial, em seguida acelera de novo + melhorar a colisão)
-
+(Arrumar quando a bola pega em 2 bricks, consertar isso (está passando não está rebatendo)
 6 - adicionar sons 
 7 - refatorar o codigo(melhorar o codigo)
 8 - adicionar animaçao 
