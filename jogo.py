@@ -199,9 +199,10 @@ class Bar(pygame.sprite.Sprite):
 
 
 class Powers(pygame.sprite.Sprite):
-    def __init__(self, power_img, center, bottom):
+    def __init__(self, dic_power_img, center, bottom):
         pygame.sprite.Sprite.__init__(self)
-        self.image = random.choice(power_img) # Escolhe qual dos poderes será usado
+        escolha = random.choice(dic_power_img) # Escolhe qual dos poderes será usado
+        self.image = dic_power_image[escolha]
         self.rect = self.image.get_rect()
         self.rect.centerx = center
         self.rect.bottom = bottom
@@ -210,15 +211,26 @@ class Powers(pygame.sprite.Sprite):
         self.rect.y += self.speedy # Atualiza o poder com sua velocidade padrão
         if self.rect.bottom < 0:
             self.kill() # Apaga o sprite do poder caso ele saia da tela
-    def power_up(self, power_numbers):
-        power = power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
-        a=0
-        if power == 1:
-            a=1
-        if power == 2:
-            a=2
-        if power == 3:
-            a=3
+    def power_up(self, dic_power_numbers):
+        power = dic_power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
+        if power == 41:
+            FPS = 45
+        if power == 42:
+            FPS = 75
+        if power == 43:
+            for i in range(2):
+                ball = Ball(ball_img)
+                all_sprites.add(ball)
+                all_balls.add(ball)
+        if power == 44:
+            for bricks in all_bricks:
+                pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)            
+        if power == 45:
+            pygame.sprite.groupcollide(all_balls, all_bricks, False, False, pygame.sprite.collide_mask)
+        if power == 46:
+            BAR_WIDHTH=175
+        if power == 47:
+            BAR_WIDHTH=225
 
 
 
