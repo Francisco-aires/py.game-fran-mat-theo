@@ -76,7 +76,7 @@ class Ball(pygame.sprite.Sprite):
         self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
         self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
         self.speedx = 0 # velocidade inicial
-        self.speedy = 0.3  # Velocidade negativa para mover a bola para cima inicialmente
+        self.speedy = 0.15  # Velocidade negativa para mover a bola para cima inicialmente
         self.condicao_hit_ball_bar=0
 
     def update (self):
