@@ -268,7 +268,7 @@ pygame.mixer.music.play(-1)
 
 # Variável que ajusta velocidde[
 clock = pygame.time.Clock()
-FPS = 30
+FPS = 60
 
 #========loop principal========
 while game:
