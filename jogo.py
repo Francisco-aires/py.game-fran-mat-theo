@@ -86,7 +86,7 @@ class Ball(pygame.sprite.Sprite):
         # Atualiza as posições do retângulo com valores inteiros
         self.rect.x = int(self.real_x)
         self.rect.y = int(self.real_y)        
-        # Rebate no teto
+        # Rebate nos ladosss
         if self.rect.right > WIDTH or self.rect.left < 0:
             self.speedx = -self.speedx
         # Rebate a bola na borda superior
