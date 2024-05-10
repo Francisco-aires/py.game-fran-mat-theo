@@ -29,7 +29,12 @@ BALL_WIDHTH=20
 BALL_HEIGHT=20
 ball_img=pygame.image.load('Img/58-Breakout-Tiles.png').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
-
+POWER_WIDGTH = 20
+POWER_HEIGHT = 20
+dic_power = {}
+for i in range(41, 49):
+    dic_power["Poder {0}".format(i)] = pygame.image.load('Img/{0}-Breakout-Tiles.png'.format(i)).convert_alpha()
+    dic_power["Poder {0}".format(i)] = pygame.transform.scale(dic_power["Poder {0}".format(i)], (POWER_WIDGTH, POWER_HEIGHT))
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
     running = True
@@ -304,8 +309,18 @@ while game:
             # A colisão é mais provavelmente superior ou inferior
             ball.speedy = -ball.speedy
         else:
-            # A colisão é mais provavelmente lateral
-            ball.speedx = -ball.speedx
+            if brick.rect.y < ball.rect.centery < brick.rect.y + brick.rect.height:
+                # Se a bola estiver entre duas fileiras, determine a direção da bola
+                # Se a velocidade y for positiva, a bola está indo para baixo, caso contrário, está indo para cima
+                if ball.speedy > 0:
+                    # Se a bola estiver indo para baixo, inverta sua velocidade y
+                    ball.speedy = - ball.speedy
+                else:
+                    # Se a bola estiver indo para cima, inverta sua velocidade x
+                    ball.speedx = - ball.speedx
+            else:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
 
     # colizao da barrinha X bolinha
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
