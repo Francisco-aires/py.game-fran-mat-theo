@@ -6,6 +6,9 @@ import random
 
 pygame.init()
 
+#----------- importar outras coisas
+from funcoes import *
+
 #---------- Gera tela principal
 WIDTH=850
 HEIGHT=600
@@ -18,6 +21,9 @@ BRICK_WIDTH=50
 BRICK_HEIGHT=25
 brick_img=pygame.image.load('Img/01-Breakout-Tiles.png').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
+
+brick2_img=pygame.image.load('Img/07-Breakout-Tiles.png').convert_alpha()
+brick2_img=pygame.transform.scale(brick2_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 BAR_WIDHTH=200
 BAR_HEIGHT=25
@@ -162,6 +168,32 @@ class Brick(pygame.sprite.Sprite):
         self.rect.x=self.rect.x  #  ((compoletar função update))
 
 
+class Brick2(pygame.sprite.Sprite):
+    def __init__(self,img):
+        #Construtor da classe mãe (Sprite)
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        condicao=True
+        while condicao:
+            lista_par=[] #lista com as coordenadas do brick para verificar se essa esta livre
+            x= random.choice(lista_x)
+            y=random.choice(lista_y)
+            lista_par.append(x)
+            lista_par.append(y)
+            if lista_par in lista_bricks:   #Modificar caso já esteja lotado
+                condicao=True
+            else:
+                condicao=False
+                lista_bricks.append(lista_par)
+  
+        self.rect.x = x
+        self.rect.y = y
+    # criar(função update(self)) se quiser movimentar o brick
+    def update(self):
+        self.rect.x=self.rect.x  #  ((compoletar função update))
+
+
 class Ball(pygame.sprite.Sprite):
     def __init__(self, img):
         pygame.sprite.Sprite.__init__(self)
@@ -226,6 +258,10 @@ class Bar(pygame.sprite.Sprite):
             self.real_x = self.rect.x # sintonizar com a posicao real
 
 
+
+    
+
+
 class Powers(pygame.sprite.Sprite):
     def __init__(self, dic_power_img, center, bottom):
         pygame.sprite.Sprite.__init__(self)
@@ -257,7 +293,7 @@ class Powers(pygame.sprite.Sprite):
             pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask) # Poder que deixa a bola forte           
         if power == 45:
             pygame.sprite.groupcollide(all_balls, all_bricks, False, False, pygame.sprite.collide_mask) # Poder que deixa a bola fraca
-        if power == 46:
+        if power == 46: 
             BAR_WIDHTH = 175 # Poder que diminui a barra
         if power == 47:
             BAR_WIDHTH = 225 # Poder que expande a barra
@@ -294,16 +330,22 @@ game=True
 
 #criando grupo Bricks
 all_sprites = pygame.sprite.Group()
-all_bricks=pygame.sprite.Group()
+all_bricks=pygame.sprite.Group() #brick básico
+bricks_2=pygame.sprite.Group() #brick 2
 all_balls=pygame.sprite.Group()
 all_powers = pygame.sprite.Group()
 all_bullets = pygame.sprite.Group()
 
 #Criando os Bricks
-for i in range(100):
+for i in range(50):
     brick=Brick(brick_img)
     all_bricks.add(brick)
     all_sprites.add(brick)
+
+for j in range(25):
+    brick2=Brick2(brick2_img)
+    all_bricks.add(brick2)
+    all_sprites.add(brick2)
 
 #Barrinha criada
 bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
@@ -399,10 +441,28 @@ while game:
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
     if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
-        if bar.speedx > 0:
-            ball.speedx = bar.speedx-2
-        if bar.speedx < 0:
-            ball.speedx=bar.speedx+2
+            if bar.speedx > 0:
+                ball.speedx = bar.speedx
+            elif bar.speedx < 0:
+                ball.speedx=ball.speedx+bar.speedx+2
+            else:
+                ball.speedx = ball.speedx
+        if ball.speedx<0:
+            if bar.speedx < 0:
+                ball.speedx = bar.speedx
+            elif bar.speedx > 0:
+                ball.speedx=ball.speedx+bar.speedx-2
+            else:
+                ball.speedx = ball.speedx
+        if ball.speedx==0:
+            if bar.speedx < 0:
+                ball.speedx = bar.speedx
+            elif bar.speedx > 0:
+                ball.speedx= bar.speedx
+            else:
+                ball.speedx = ball.speedx
+
+        
 
     # ----- Gera saídas
     window.fill((0,0,0))
