@@ -68,7 +68,7 @@ def tela_inicio(window):
 
         pygame.display.update()  # Atualiza a tela para mostrar os textos
 
-def tela_fim(window):
+def tela_Gameover(window):
     running = True
     while running:
         for event in pygame.event.get():
@@ -82,18 +82,42 @@ def tela_fim(window):
         font = pygame.font.Font(None, 36)  # Define a fonte
 
         # Cria um texto de Game Over
-        texto_fim = font.render('GAME OVER', True, ((255, 0, 0)))
-        fim_rect = texto_fim.get_rect(center=(WIDTH / 2, HEIGHT / 3))
+        texto_gameover = font.render('GAME OVER', True, ((255, 0, 0)))
+        fim_rect = texto_gameover.get_rect(center=(WIDTH / 2, HEIGHT / 3))
 
         # Cria um texto de instrução
         instrucao = font.render('Pressione qualquer tecla para recomeçar', True, ((255, 255, 255)))
         instrucao_rect = instrucao.get_rect(center=(WIDTH / 2, HEIGHT / 2))
 
         # Desenha os textos na tela
-        window.blit(texto_fim, fim_rect)
+        window.blit(texto_gameover, fim_rect)
         window.blit(instrucao, instrucao_rect)
 
         pygame.display.update()
+def tela_fim(window):
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                running = False
+
+        window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
+        font = pygame.font.Font(None, 36)  # Define a fonte
+
+        # Cria um texto de boas-vindas
+        texto_inicio = font.render('Você ganhou!', True, ((255, 255, 255)))
+        inicio_rect = texto_inicio.get_rect(center=(WIDTH / 2, HEIGHT / 3))
+
+        # Cria um texto de instrução
+        instrucao = font.render('Pressione qualquer tecla para recomeçar', True, ((255, 255, 255)))
+        instrucao_rect = instrucao.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+
+        # Desenha os textos na tela
+        window.blit(texto_inicio, inicio_rect)
+        window.blit(instrucao, instrucao_rect)
 
 ############### carregar sons #####################
 # Carrega o som de colisão
