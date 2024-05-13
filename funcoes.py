@@ -2,6 +2,8 @@
 import time
 import pygame
 import random
+
+from jogo import *
 ###########
 # funções #
 ###########

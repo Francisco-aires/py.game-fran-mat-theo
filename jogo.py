@@ -360,7 +360,7 @@ while game:
     #verifica se houve colisão
     # colizao da bolinha X bloco
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
-    # colizao com o bloco inverte a bola
+    # colisao com o bloco inverte a bola
     for ball, bricks_hit in hits_ball_brick.items():
         if len(bricks_hit)==1:
             brick = bricks_hit[0]  # Pega o primeiro tijolo atingido
@@ -397,20 +397,21 @@ while game:
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
     if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
+        if ball.speedx>0:
             if bar.speedx > 0:
                 ball.speedx = bar.speedx
             elif bar.speedx < 0:
                 ball.speedx=ball.speedx+bar.speedx+2
             else:
                 ball.speedx = ball.speedx
-        if ball.speedx<0:
+        elif ball.speedx<0:
             if bar.speedx < 0:
                 ball.speedx = bar.speedx
             elif bar.speedx > 0:
                 ball.speedx=ball.speedx+bar.speedx-2
             else:
                 ball.speedx = ball.speedx
-        if ball.speedx==0:
+        elif ball.speedx==0:
             if bar.speedx < 0:
                 ball.speedx = bar.speedx
             elif bar.speedx > 0:
