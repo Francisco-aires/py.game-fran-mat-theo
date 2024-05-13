@@ -446,20 +446,21 @@ while game:
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
     if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
+        if ball.speedx>0:
             if bar.speedx > 0:
                 ball.speedx = bar.speedx
             elif bar.speedx < 0:
                 ball.speedx=ball.speedx+bar.speedx+2
             else:
                 ball.speedx = ball.speedx
-        if ball.speedx<0:
+        elif ball.speedx<0:
             if bar.speedx < 0:
                 ball.speedx = bar.speedx
             elif bar.speedx > 0:
                 ball.speedx=ball.speedx+bar.speedx-2
             else:
                 ball.speedx = ball.speedx
-        if ball.speedx==0:
+        elif ball.speedx==0:
             if bar.speedx < 0:
                 ball.speedx = bar.speedx
             elif bar.speedx > 0:
