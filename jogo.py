@@ -301,7 +301,7 @@ game=True
 #criando grupo Bricks
 all_sprites = pygame.sprite.Group()
 all_bricks=pygame.sprite.Group() #brick básico
-bricks_2=pygame.sprite.Group() #brick 2
+all_bricks_2=pygame.sprite.Group() #brick 2
 all_balls=pygame.sprite.Group()
 
 #Criando os Bricks
@@ -312,7 +312,7 @@ for i in range(50):
 
 for j in range(25):
     brick2=Brick2(brick2_img)
-    all_bricks.add(brick2)
+    all_bricks_2.add(brick2)
     all_sprites.add(brick2)
 
 #Barrinha criada
@@ -354,6 +354,7 @@ while game:
 
     #atualiza posições (barra e bola)
     all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
+    all_bricks_2.update()
     bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
     ball.update() #bolinha movendoo
 
@@ -392,6 +393,10 @@ while game:
         else:
             # A colisão é mais provavelmente lateral
             ball.speedx = -ball.speedx
+    
+
+    hits_ball_brick2=pygame.sprite.groupcollide(all_balls, all_bricks_2, False, False, pygame.sprite.collide_mask)
+    
 
     # colizao da barrinha X bolinha
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
@@ -428,7 +433,9 @@ while game:
     # Adicione aqui o desenho da bola # adcionei
     window.blit(ball.image, ball.rect) 
     # ----- Desenhando bricks
-    all_bricks.draw(window) 
+    all_bricks.draw(window)
+
+    all_bricks_2.draw(window)
     
     pygame.display.update() # mostra o novo frame para o jogador
 #======Finalização=======
