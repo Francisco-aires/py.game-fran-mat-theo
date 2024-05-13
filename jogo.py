@@ -331,10 +331,10 @@ while game:
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
     if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
-        if bar.speedx>0:
-            ball.speedx=bar.speedx-2
-        if bar.speedx<0:
-            ball.speex=bar.speedx+2
+        if bar.speedx > 0:
+            ball.speedx = bar.speedx-2
+        if bar.speedx < 0:
+            ball.speedx=bar.speedx+2
 
     # ----- Gera saídas
     window.fill((0,0,0))
