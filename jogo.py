@@ -6,6 +6,9 @@ import random
 
 pygame.init()
 
+#----------- importar outras coisas
+from funcoes import *
+
 #---------- Gera tela principal
 WIDTH=850
 HEIGHT=600
