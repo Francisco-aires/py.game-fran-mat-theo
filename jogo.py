@@ -43,6 +43,10 @@ for i in range(41, 49):
     dic_power_image["Poder {0}".format(i)] = pygame.image.load('Img/{0}-Breakout-Tiles.png'.format(i)).convert_alpha()
     dic_power_image["Poder {0}".format(i)] = pygame.transform.scale(dic_power_image["Poder {0}".format(i)], (POWER_WIDGTH, POWER_HEIGHT))
     dic_power_numeros["Poder {0}".format(i)] = i
+BULLETS_WIDGTH = 10
+BULLETS_HEIGHT = 20
+bullets_img = pygame.image.load("Img/61-Breakout-Tiles.png")
+bullets_img = pygame.transform.scale(bullets_img, (BULLETS_WIDGTH, BULLETS_HEIGHT))
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
     running = True
@@ -271,8 +275,11 @@ class Powers(pygame.sprite.Sprite):
         self.rect.y += self.speedy # Atualiza o poder com sua velocidade padrão
         if self.rect.bottom < 0:
             self.kill() # Apaga o sprite do poder caso ele saia da tela
+
     def power_up(self, dic_power_numbers):
         power = dic_power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
+        inicial = pygame.time.get_ticks()
+        self.frame_ticks = 5000
         if power == 41:
             FPS = 45 # Poder que deixa o jogo mais lento
         if power == 42:
@@ -283,15 +290,38 @@ class Powers(pygame.sprite.Sprite):
                 all_sprites.add(ball)
                 all_balls.add(ball)
         if power == 44:
-            for bricks in all_bricks:
-                pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask) # Poder que deixa a bola forte           
+            pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask) # Poder que deixa a bola forte           
         if power == 45:
             pygame.sprite.groupcollide(all_balls, all_bricks, False, False, pygame.sprite.collide_mask) # Poder que deixa a bola fraca
         if power == 46: 
-            BAR_WIDHTH=175 # Poder que diminui a barra 
+            BAR_WIDHTH = 175 # Poder que diminui a barra
         if power == 47:
-            BAR_WIDHTH=225 # Poder que expande a barra
+            BAR_WIDHTH = 225 # Poder que expande a barra
+        if power == 48:
+            bullets = Bullets(bullets_img, bar.centerx, bar.bottom)
+            all_sprites.add(bullets)
+            all_bullets.add(bullets)
+class Bullets(pygame.sprite.Sprite):
+    # Construtor da classe.
+    def __init__(self, img, bottom, centerx):
+        # Construtor da classe mãe (Sprite).
+        pygame.sprite.Sprite.__init__(self)
 
+        self.image = img
+        self.rect = self.image.get_rect()
+
+        # Coloca no lugar inicial definido em x, y do constutor
+        self.rect.centerx = centerx
+        self.rect.bottom = bottom
+        self.speedy = -10  # Velocidade fixa para cima
+
+    def update(self):
+        # A bala só se move no eixo y
+        self.rect.y += self.speedy
+
+        # Se o tiro passar do inicio da tela, morre.
+        if self.rect.bottom < 0:
+            self.kill()
 
 
 
@@ -303,6 +333,8 @@ all_sprites = pygame.sprite.Group()
 all_bricks=pygame.sprite.Group() #brick básico
 all_bricks_2=pygame.sprite.Group() #brick 2
 all_balls=pygame.sprite.Group()
+all_powers = pygame.sprite.Group()
+all_bullets = pygame.sprite.Group()
 
 #Criando os Bricks
 for i in range(50):
@@ -357,10 +389,22 @@ while game:
     all_bricks_2.update()
     bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
     ball.update() #bolinha movendoo
-
     #verifica se houve colisão
     # colizao da bolinha X bloco
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
+    if hits_ball_brick != []:
+        choice = random.radiant(1, 9)
+        if choice > 6:
+            power = Powers(dic_power_image, brick_center, brick.bottom)
+            all_powers.add(power)
+            all_sprites.add(power)
+    hits_power_bar = pygame.sprite.groupcollide(bar, all_powers, False, True, pygame.sprite.collide_mask)
+    if hits_power_bar != []:
+        power.power_up(dic_power_numeros)
+        now = pygame.time.get_ticks()
+        elapsed_ticks = now - power.inicial
+        if elapsed_ticks > 5000:
+            power.kill()
     # colizao com o bloco inverte a bola
     for ball, bricks_hit in hits_ball_brick.items():
         if len(bricks_hit)==1:
@@ -402,7 +446,6 @@ while game:
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
     if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
-        if ball.speedx>0:
             if bar.speedx > 0:
                 ball.speedx = bar.speedx
             elif bar.speedx < 0:
