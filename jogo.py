@@ -393,7 +393,7 @@ while game:
     # colizao da bolinha X bloco
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
     if hits_ball_brick != []:
-        choice = random.radiant(1, 9)
+        choice = random.randint(1, 9)
         if choice > 6:
             power = Powers(dic_power_image, brick_center, brick.bottom)
             all_powers.add(power)
