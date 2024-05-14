@@ -7,7 +7,7 @@ import random
 pygame.init()
 
 #----------- importar outras coisas
-from funcoes import *
+#from funcoes import *
 
 #---------- Gera tela principal
 WIDTH=850
@@ -394,17 +394,23 @@ while game:
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
     if hits_ball_brick != []:
         choice = random.randint(1, 9)
+        brick_center = brick.rect.centerx
+        brick_bottom = brick.rect.bottom
         if choice > 6:
-            power = Powers(dic_power_image, brick_center, brick.bottom)
+            power = Powers(dic_power_image,brick_center,brick_bottom)
             all_powers.add(power)
             all_sprites.add(power)
-    hits_power_bar = pygame.sprite.groupcollide(bar, all_powers, False, True, pygame.sprite.collide_mask)
-    if hits_power_bar != []:
+
+    # colizao do poder
+
+    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
+    for power in hits_power_bar:
         power.power_up(dic_power_numeros)
         now = pygame.time.get_ticks()
         elapsed_ticks = now - power.inicial
         if elapsed_ticks > 5000:
             power.kill()
+
     # colizao com o bloco inverte a bola
     for ball, bricks_hit in hits_ball_brick.items():
         if len(bricks_hit)==1:
