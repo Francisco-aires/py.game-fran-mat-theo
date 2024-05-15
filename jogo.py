@@ -396,8 +396,9 @@ while game:
         choice = random.randint(1, 9)
         brick_center = brick.rect.centerx
         brick_bottom = brick.rect.bottom
+        choice = random.randint(1, 9)
         if choice > 6:
-            power = Powers(dic_power_image,brick_center,brick_bottom)
+            power = Powers(dic_power_image, brick_center, brick_bottom)
             all_powers.add(power)
             all_sprites.add(power)
 
