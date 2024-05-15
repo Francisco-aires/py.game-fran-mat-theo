@@ -40,8 +40,8 @@ BALL_WIDHTH=20
 BALL_HEIGHT=20
 ball_img=pygame.image.load('Img/58-Breakout-Tiles.png').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
-POWER_WIDGTH = 20
-POWER_HEIGHT = 20
+POWER_WIDGTH = 30
+POWER_HEIGHT = 30
 dic_power_image = {}
 dic_power_numeros = {}
 for i in range(41, 49):
@@ -275,14 +275,14 @@ class Powers(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = center
         self.rect.bottom = bottom
-        self.speedy = 5
+        self.speedy = 2
     def update(self):
         self.rect.y += self.speedy # Atualiza o poder com sua velocidade padrão
         if self.rect.bottom < 0:
             self.kill() # Apaga o sprite do poder caso ele saia da tela
 
     def power_up(self, dic_power_numbers):
-        power = dic_power_numbers[self.image] # Acha qual é o poder dependendo de qual imagem foi escolhida
+        power = dic_power_numbers[self.power_type] # Acha qual é o poder dependendo de qual imagem foi escolhida
         inicial = pygame.time.get_ticks()
         if power == 41:
             FPS = 45 # Poder que deixa o jogo mais lento
@@ -331,7 +331,9 @@ class Powers(pygame.sprite.Sprite):
             if elapsed_ticks > 5000:
                 BAR_WIDHTH = 200
         if power == 48:
-            bullets = Bullets(bullets_img, bar.centerx, bar.bottom)
+            brick_center = brick.rect.centerx
+            brick_bottom = brick.rect.bottom
+            bullets = Bullets(bullets_img, brick_center, brick_bottom)
             all_sprites.add(bullets)
             all_bullets.add(bullets)
             now = pygame.time.get_ticks()
@@ -429,6 +431,7 @@ while game:
     all_bricks_2.update()
     bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
     ball.update() #bolinha movendoo
+    all_powers.update()
     #verifica se houve colisão
     # colizao da bolinha X bloco
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
@@ -436,7 +439,6 @@ while game:
         choice = random.randint(1, 9)
         brick_center = brick.rect.centerx
         brick_bottom = brick.rect.bottom
-        choice = random.randint(1, 9)
         if choice > 6:
             power = Powers(dic_power_image, brick_center, brick_bottom)
             all_powers.add(power)
@@ -523,6 +525,8 @@ while game:
     all_bricks.draw(window)
 
     all_bricks_2.draw(window)
+
+    all_powers.draw(window)
     
     pygame.display.update() # mostra o novo frame para o jogador
 #======Finalização=======
