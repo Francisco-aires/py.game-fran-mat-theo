@@ -25,6 +25,9 @@ brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 brick2_img=pygame.image.load('Img/07-Breakout-Tiles.png').convert_alpha()
 brick2_img=pygame.transform.scale(brick2_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
+brick2_1_img=pygame.image.load('Img/08-Breakout-Tiles.png').convert_alpha()
+brick2_1_img=pygame.transform.scale(brick2_1_img, (BRICK_WIDTH, BRICK_HEIGHT))
+
 LIVE_WIDGTH = 20
 LIVE_HEIGHT = 20
 live_img = pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
@@ -372,6 +375,7 @@ game=True
 all_sprites = pygame.sprite.Group()
 all_bricks=pygame.sprite.Group() #brick básico
 all_bricks_2=pygame.sprite.Group() #brick 2
+all_bricks_2_1=pygame.sprite.Group() #brick 2 meio quebrado quebrado
 all_balls=pygame.sprite.Group()
 all_powers = pygame.sprite.Group()
 all_bullets = pygame.sprite.Group()
@@ -427,6 +431,7 @@ while game:
     #atualiza posições (barra e bola)
     all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
     all_bricks_2.update()
+    all_bricks_2_1.update()
     bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
     ball.update() #bolinha movendoo
     #verifica se houve colisão
@@ -483,6 +488,67 @@ while game:
     
 
     hits_ball_brick2=pygame.sprite.groupcollide(all_balls, all_bricks_2, False, False, pygame.sprite.collide_mask)
+    ball_center = ball.rect.centerx
+    brick2_center = brick2.rect.centerx
+
+    for ball, bricks2_hit in hits_ball_brick2.items():
+        if len(bricks2_hit)==1:
+            brick2 = bricks2_hit[0]  # Pega o primeiro tijolo atingido
+            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
+                # A colisão é mais provavelmente superior ou inferior
+                ball.speedy = -ball.speedy
+            else:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
+            
+            # Verifica se a colisão foi mais lateral do que superior/inferior
+            # Comparando o centro da bola com o centro do tijolo
+            ball_center = ball.rect.centerx
+            brick2_center = brick2.rect.centerx
+
+            # Verifica se a colisão foi mais lateral
+            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
+                # A colisão é mais provavelmente superior ou inferior
+                ball.speedy = -ball.speedy
+        
+            else:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
+
+            
+        if len(bricks2_hit)==2:
+            brick2 =bricks2_hit[0]
+            ball_center = ball.rect.centerx
+            brick2_center = brick2.rect.centerx
+            
+
+            #verifia se a colisão foi diferente
+            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
+                # A colisão é mais provavelmente superior ou inferior
+                ball.speedy = -ball.speedy
+            else:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
+            brick2=bricks2_hit[1]
+
+            # Verifica se a colisão foi mais lateral do que superior/inferior
+            # Comparando o centro da bola com o centro do tijolo
+            ball_center = ball.rect.centerx
+            brick2_center = brick2.rect.centerx
+
+            # Verifica se a colisão foi mais lateral
+            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
+                # A colisão é mais provavelmente superior ou inferior
+                ball.speedy = -ball.speedy
+        
+            else:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
+            
+        for brick2 in bricks2_hit:
+            brick2=Brick(brick2_1_img)
+            all_bricks_2_1.add(brick2)
+            all_bricks_2.remove(brick2)
     
 
     # colizao da barrinha X bolinha
