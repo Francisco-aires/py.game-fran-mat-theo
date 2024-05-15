@@ -265,8 +265,8 @@ class Bar(pygame.sprite.Sprite):
 class Powers(pygame.sprite.Sprite):
     def __init__(self, dic_power_img, center, bottom):
         pygame.sprite.Sprite.__init__(self)
-        escolha = random.choice(dic_power_img) # Escolhe qual dos poderes será usado
-        self.image = dic_power_image[escolha]
+        self.power_type = random.choice(list(dic_power_img.keys()))
+        self.image = dic_power_img[self.power_type]
         self.rect = self.image.get_rect()
         self.rect.centerx = center
         self.rect.bottom = bottom
