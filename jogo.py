@@ -346,6 +346,9 @@ class Powers(pygame.sprite.Sprite):
                     all_sprites.remove(bullets)
                 while bullets in all_bullets:
                     all_bullets.remove(bullets)
+
+
+                    
 class Bullets(pygame.sprite.Sprite):
     # Construtor da classe.
     def __init__(self, img, bottom, centerx):
