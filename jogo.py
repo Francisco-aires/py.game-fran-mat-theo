@@ -460,36 +460,79 @@ while game:
 
     # colizao com o bloco inverte a bola
     for ball, bricks_hit in hits_ball_brick.items():
-        if len(bricks_hit)==1:
-            brick = bricks_hit[0]  # Pega o primeiro tijolo atingido
-        
-        if len(bricks_hit)==2:
-            brick=bricks_hit[0]
-            ball_center = ball.rect.centerx
-            brick_center = brick.rect.centerx
+        ball_left=ball.rect.left
+        ball_right=ball.rect.right
+        ball_top=ball.rect.top
+        ball_bottom=ball.rect.bottom
+        ball_speedx=ball.speedx
+        ball_speedy=ball.speedy
+        for brick in bricks_hit:
+            
+            brick_left=brick.rect.left
+            brick_right=brick.rect.right
+            brick_top=brick.rect.top
+            brick_bottom=brick.rect.bottom
+
+            
+         
 
             #verifia se a colisão foi diferente
-            if abs(ball_center - brick_center) <= brick.rect.width / 2:
+            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
                 # A colisão é mais provavelmente superior ou inferior
                 ball.speedy = -ball.speedy
-            else:
+            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
                 # A colisão é mais provavelmente lateral
                 ball.speedx = -ball.speedx
-            brick=bricks_hit[1]
+            else:
+                if ball_speedx>0 and ball_speedy<0:
+                    print('entrou')
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        print('caiu')
+                        ball.speedx=-ball.speedx
+                    else:
+                        print('não caiu')
 
-        # Verifica se a colisão foi mais lateral do que superior/inferior
-        # Comparando o centro da bola com o centro do tijolo
-        ball_center = ball.rect.centerx
-        brick_center = brick.rect.centerx
+                elif ball_speedx<0 and ball_speedy>0:
+                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
 
-        # Verifica se a colisão foi mais lateral
-        if abs(ball_center - brick_center) <= brick.rect.width / 2:
-            # A colisão é mais provavelmente superior ou inferior
-            ball.speedy = -ball.speedy
-    
-        else:
-            # A colisão é mais provavelmente lateral
-            ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                elif ball_speedx<0 and ball_speedy<0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                elif ball_speedx>0 and ball_speedy>0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx = -ball.speedx
+
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+                        ball.speedx=-ball.speedx
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
     
 
     hits_ball_brick2=pygame.sprite.groupcollide(all_balls, all_bricks_2, False, False, pygame.sprite.collide_mask)
@@ -497,58 +540,79 @@ while game:
     brick2_center = brick2.rect.centerx
 
     for ball, bricks2_hit in hits_ball_brick2.items():
-        if len(bricks2_hit)==1:
-            brick2 = bricks2_hit[0]  # Pega o primeiro tijolo atingido
-            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
-                # A colisão é mais provavelmente superior ou inferior
-                ball.speedy = -ball.speedy
-            else:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
+        ball_left=ball.rect.left
+        ball_right=ball.rect.right
+        ball_top=ball.rect.top
+        ball_bottom=ball.rect.bottom
+        ball_speedx=ball.speedx
+        ball_speedy=ball.speedy
+        for brick in bricks2_hit:
             
-            # Verifica se a colisão foi mais lateral do que superior/inferior
-            # Comparando o centro da bola com o centro do tijolo
-            ball_center = ball.rect.centerx
-            brick2_center = brick2.rect.centerx
-
-            # Verifica se a colisão foi mais lateral
-            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
-                # A colisão é mais provavelmente superior ou inferior
-                ball.speedy = -ball.speedy
-        
-            else:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
+            brick_left=brick.rect.left
+            brick_right=brick.rect.right
+            brick_top=brick.rect.top
+            brick_bottom=brick.rect.bottom
 
             
-        if len(bricks2_hit)==2:
-            brick2 =bricks2_hit[0]
-            ball_center = ball.rect.centerx
-            brick2_center = brick2.rect.centerx
-            
+         
 
             #verifia se a colisão foi diferente
-            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
+            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
                 # A colisão é mais provavelmente superior ou inferior
                 ball.speedy = -ball.speedy
-            else:
+            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
                 # A colisão é mais provavelmente lateral
                 ball.speedx = -ball.speedx
-            brick2=bricks2_hit[1]
-
-            # Verifica se a colisão foi mais lateral do que superior/inferior
-            # Comparando o centro da bola com o centro do tijolo
-            ball_center = ball.rect.centerx
-            brick2_center = brick2.rect.centerx
-
-            # Verifica se a colisão foi mais lateral
-            if abs(ball_center - brick2_center) <= brick2.rect.width / 2:
-                # A colisão é mais provavelmente superior ou inferior
-                ball.speedy = -ball.speedy
-        
             else:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
+                if ball_speedx>0 and ball_speedy<0:
+                    print('entrou')
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        print('caiu')
+                        ball.speedx=-ball.speedx
+                    else:
+                        print('não caiu')
+
+                elif ball_speedx<0 and ball_speedy>0:
+                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                elif ball_speedx<0 and ball_speedy<0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                elif ball_speedx>0 and ball_speedy>0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx = -ball.speedx
+
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+                        ball.speedx=-ball.speedx
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
             
         for brick2 in bricks2_hit:
             brick2=Brick(brick2_1_img)
