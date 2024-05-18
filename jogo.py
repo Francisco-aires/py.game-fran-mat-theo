@@ -447,10 +447,13 @@ while game:
         choice = random.randint(1, 9)
         brick_center = brick.rect.centerx
         brick_bottom = brick.rect.bottom
-        if choice > 6:
-            power = Powers(dic_power_image, brick_center, brick_bottom)
-            all_powers.add(power)
-            all_sprites.add(power)
+    for ball, bricks_hit in hits_ball_brick.items():
+        for brick in bricks_hit:
+            # Define a probabilidade de gerar um poder (0.1 para 10%)
+            if random.random() < 0.1:  # Ajuste este valor para tornar mais raro ou comum
+                power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
+                all_powers.add(power)
+                all_sprites.add(power)
 
     # colizao do poder
 
