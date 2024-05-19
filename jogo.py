@@ -617,10 +617,10 @@ while game:
                     elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
                         ball.speedy=-ball.speedy
             
-        for brick2 in bricks2_hit:
-            brick2=Brick(brick2_1_img)
-            all_bricks_2_1.add(brick2)
-            all_bricks_2.remove(brick2)
+            brick=Brick(brick2_1_img)
+            all_bricks_2_1.add(brick)
+            all_bricks_2.remove(brick)
+        
     
 
     # colizao da barrinha X bolinha
