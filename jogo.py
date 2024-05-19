@@ -23,10 +23,13 @@ brick_img=pygame.image.load('Img/01-Breakout-Tiles.png').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 brick2_img=pygame.image.load('Img/07-Breakout-Tiles.png').convert_alpha()
-brick2_img=pygame.transform.scale(brick2_img, (BRICK_WIDTH*2.5, BRICK_HEIGHT))
+brick2_img=pygame.transform.scale(brick2_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 brick2_1_img=pygame.image.load('Img/08-Breakout-Tiles.png').convert_alpha()
 brick2_1_img=pygame.transform.scale(brick2_1_img, (BRICK_WIDTH, BRICK_HEIGHT))
+
+brick3_img=pygame.image.load('Img/05-Breakout-Tiles.png').convert_alpha()
+brick3_img=pygame.transform.scale(brick3_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 LIVE_WIDGTH = 20
 LIVE_HEIGHT = 20
@@ -145,16 +148,20 @@ pygame.mixer.music.load('sons/name.mp3')
 
 #---------- Inicia estrutura de dados
 #lista posições bricks
-lista_x=[30,90,150,210,270,330,390,450,510,570,630,690,750]
+lista_x=[30,90,150,210,270,510,570,630,690,750]
 lista_y=[30,60,90,120,180,210,240]
 lista_bricks=[]#lista com a posição de todos os blocos
 
 #lista posições bricks inquebráveis (2)
 
-lista_x2=[150,390,630]
-lista_y2=[155]
-lista_bricks2=[]
-#definindo os novos tipos
+lista_x2=[30,90,150,210,270,510,570,630,690,750]
+lista_y2=[30,60,90,120,180,210,240]
+
+#definindo os novos tiposz
+
+lista_x3=[30,90,150,210,270,510,570,630,690,750]
+lista_y3=[30,60,90,120,180,210,240]
+
 
 class Brick(pygame.sprite.Sprite):
     def __init__(self,img):
@@ -195,11 +202,48 @@ class Brick2(pygame.sprite.Sprite):
             y=random.choice(lista_y2)
             lista_par2.append(x)
             lista_par2.append(y)
-            if lista_par2 in lista_bricks2:   #Modificar caso já esteja lotado
+            if lista_par2 in lista_bricks:   #Modificar caso já esteja lotado
                 condicao=True
             else:
                 condicao=False
-                lista_bricks2.append(lista_par2)
+                lista_bricks.append(lista_par2)
+  
+        self.rect.x = x
+        self.rect.y = y
+    # criar(função update(self)) se quiser movimentar o brick
+    def update(self):
+        self.rect.x=self.rect.x  #  ((compoletar função update))
+
+class Brick2_1(pygame.sprite.Sprite):
+    def __init__(self,img,x,y):
+        #Construtor da classe mãe (Sprite)
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x=x
+        self.rect.y=y
+
+  
+
+
+class Brick3(pygame.sprite.Sprite):
+    def __init__(self,img):
+        #Construtor da classe mãe (Sprite)
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        condicao=True
+        while condicao:
+            lista_par3=[] #lista com as coordenadas do brick para verificar se essa esta livre
+            x= random.choice(lista_x3)
+            y=random.choice(lista_y3)
+            lista_par3.append(x)
+            lista_par3.append(y)
+            if lista_par3 in lista_bricks:   #Modificar caso já esteja lotado
+                condicao=True
+            else:
+                condicao=False
+                lista_bricks.append(lista_par3)
   
         self.rect.x = x
         self.rect.y = y
@@ -387,21 +431,28 @@ all_sprites = pygame.sprite.Group()
 all_bricks=pygame.sprite.Group() #brick básico
 all_bricks_2=pygame.sprite.Group() #brick 2
 all_bricks_2_1=pygame.sprite.Group() #brick 2 meio quebrado quebrado
+all_bricks_3=pygame.sprite.Group() #brick 3(poder)
 all_balls=pygame.sprite.Group()
 all_powers = pygame.sprite.Group()
 all_bullets = pygame.sprite.Group()
 
 #Criando os Bricks
-for i in range(50):
+for i in range(30):
     brick=Brick(brick_img)
     all_bricks.add(brick)
     all_sprites.add(brick)
 
-rangej= len(lista_x2)*len(lista_y2) #número de bricks 2 (inquebráveis que serão colocados)
-for j in range(rangej):
+
+for j in range(10):
     brick2=Brick2(brick2_img)
     all_bricks_2.add(brick2)
     all_sprites.add(brick2)
+
+
+for m in range(10):
+    brick3=Brick3(brick3_img)
+    all_bricks_3.add(brick3)
+    all_sprites.add(brick3)
 
 #Barrinha criada
 bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
@@ -444,30 +495,14 @@ while game:
     all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
     all_bricks_2.update()
     all_bricks_2_1.update()
+    all_bricks_3.update()
     bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
     ball.update() #bolinha movendoo
     all_powers.update()
     #verifica se houve colisão
     # colizao da bolinha X bloco
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
-    if hits_ball_brick != []:
-        choice = random.randint(1, 9)
-        brick_center = brick.rect.centerx
-        brick_bottom = brick.rect.bottom
-    for ball, bricks_hit in hits_ball_brick.items():
-        for brick in bricks_hit:
-            # Define a probabilidade de gerar um poder (0.1 para 10%)
-            if random.random() < 0.1:  # Ajuste este valor para tornar mais raro ou comum
-                power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
-                all_powers.add(power)
-                all_sprites.add(power)
-
-    # colizao do poder
-
-    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
-    for power in hits_power_bar:
-        power.power_up(dic_power_numeros)
-
+    
     # colizao com o bloco inverte a bola
     for ball, bricks_hit in hits_ball_brick.items():
         ball_left=ball.rect.left
@@ -562,10 +597,8 @@ while game:
                         
     
 
-    hits_ball_brick2=pygame.sprite.groupcollide(all_balls, all_bricks_2, False, False, pygame.sprite.collide_mask)
-    ball_center = ball.rect.centerx
-    brick2_center = brick2.rect.centerx
-
+    hits_ball_brick2=pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
+    
     for ball, bricks2_hit in hits_ball_brick2.items():
         ball_left=ball.rect.left
         ball_right=ball.rect.right
@@ -652,13 +685,230 @@ while game:
                 
                     elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
                         print('caiu')
+                        ball.speedy=-ball.speedy
+                    else:
+                        ball.speedy=-ball.speedy
+            
+            brick_2_1_x=brick.rect.x
+            brick_2_1_y=brick.rect.y
+            brick_2_1=Brick2_1(brick2_1_img,brick_2_1_x,brick_2_1_y)
+            all_bricks_2_1.add(brick_2_1)
+            all_sprites.add(brick_2_1)
+            
+           
+           
+        
+
+    hits_ball_brick3=pygame.sprite.groupcollide(all_balls, all_bricks_3, False, True, pygame.sprite.collide_mask)
+    if hits_ball_brick3 != []:
+        choice = random.randint(1, 9)
+        brick_center = brick.rect.centerx
+        brick_bottom = brick.rect.bottom
+    for ball, bricks_hit3 in hits_ball_brick3.items():
+        for brick in bricks_hit3:
+            # Define a probabilidade de gerar um poder (0.1 para 10%)
+            if random.random() < 1:  # Ajuste este valor para tornar mais raro ou comum
+                power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
+                all_powers.add(power)
+                all_sprites.add(power)
+
+    # colizao do poder
+
+    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
+    for power in hits_power_bar:
+        power.power_up(dic_power_numeros)
+
+    # colizao com o bloco inverte a bola
+    for ball, bricks_hit3 in hits_ball_brick3.items():
+        ball_left=ball.rect.left
+        ball_right=ball.rect.right
+        ball_top=ball.rect.top
+        ball_bottom=ball.rect.bottom
+        ball_speedx=ball.speedx
+        ball_speedy=ball.speedy
+        for brick in bricks_hit3:
+            
+            brick_left=brick.rect.left
+            brick_right=brick.rect.right
+            brick_top=brick.rect.top
+            brick_bottom=brick.rect.bottom
+
+            
+         
+
+            #verifia se a colisão foi diferente
+            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
+                # A colisão é mais provavelmente superior ou inferior
+                ball.speedy = -ball.speedy
+            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
+            else:
+                if ball_speedx>0 and ball_speedy<0:
+                    print('entrou')
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        print('caiu')
+                        ball.speedx=-ball.speedx
+                    else:
+                        print('não caiu')
+
+                elif ball_speedx<0 and ball_speedy>0:
+                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                elif ball_speedx<0 and ball_speedy<0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                elif ball_speedx>0 and ball_speedy>0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx = -ball.speedx
+
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+                        ball.speedx=-ball.speedx
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+
+                elif ball_speedx==0 and ball_speedy!=0:
+                    
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                       
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                    
                         ball.speedx=-ball.speedx
                     else:
                         ball.speedx=-ball.speedx
-            brick=Brick(brick2_1_img)
-            all_bricks_2_1.add(brick)
-            all_bricks_2.remove(brick)
-        
+
+
+    hits_ball_brick_2_1=pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
+    
+    # colizao com o bloco inverte a bola
+    for ball, bricks_hit in hits_ball_brick_2_1.items():
+        ball_left=ball.rect.left
+        ball_right=ball.rect.right
+        ball_top=ball.rect.top
+        ball_bottom=ball.rect.bottom
+        ball_speedx=ball.speedx
+        ball_speedy=ball.speedy
+        for brick in bricks_hit:
+            
+            brick_left=brick.rect.left
+            brick_right=brick.rect.right
+            brick_top=brick.rect.top
+            brick_bottom=brick.rect.bottom
+
+            
+         
+
+            #verifia se a colisão foi diferente
+            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
+                # A colisão é mais provavelmente superior ou inferior
+                ball.speedy = -ball.speedy
+            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
+                # A colisão é mais provavelmente lateral
+                ball.speedx = -ball.speedx
+            else:
+                if ball_speedx>0 and ball_speedy<0:
+                    print('entrou')
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        print('caiu')
+                        ball.speedx=-ball.speedx
+                    else:
+                        print('não caiu')
+
+                elif ball_speedx<0 and ball_speedy>0:
+                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                elif ball_speedx<0 and ball_speedy<0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx=-ball.speedx
+                        ball.speedy = -ball.speedy
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedx=-ball.speedx
+                
+                elif ball_speedx>0 and ball_speedy>0:
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        ball.speedx = -ball.speedx
+
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+                        ball.speedx=-ball.speedx
+
+                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        ball.speedy=-ball.speedy
+
+                elif ball_speedx==0 and ball_speedy!=0:
+                    print('entrou')
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        print('caiu')
+                        ball.speedx=-ball.speedx
+                    else:
+                        ball.speedx=-ball.speedx
+                        
+                        
+
+
+                
     
 
     # colizao da barrinha X bolinha
@@ -699,6 +949,10 @@ while game:
     all_bricks.draw(window)
 
     all_bricks_2.draw(window)
+
+    all_bricks_2_1.draw(window)
+
+    all_bricks_3.draw(window)
 
     all_powers.draw(window)
     
