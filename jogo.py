@@ -23,7 +23,7 @@ brick_img=pygame.image.load('Img/01-Breakout-Tiles.png').convert_alpha()
 brick_img=pygame.transform.scale(brick_img, (BRICK_WIDTH, BRICK_HEIGHT))
 
 brick2_img=pygame.image.load('Img/07-Breakout-Tiles.png').convert_alpha()
-brick2_img=pygame.transform.scale(brick2_img, (BRICK_WIDTH, BRICK_HEIGHT))
+brick2_img=pygame.transform.scale(brick2_img, (BRICK_WIDTH*2.5, BRICK_HEIGHT))
 
 brick2_1_img=pygame.image.load('Img/08-Breakout-Tiles.png').convert_alpha()
 brick2_1_img=pygame.transform.scale(brick2_1_img, (BRICK_WIDTH, BRICK_HEIGHT))
@@ -145,9 +145,15 @@ pygame.mixer.music.load('sons/name.mp3')
 
 #---------- Inicia estrutura de dados
 #lista posições bricks
-lista_x=[10,70,130,190,250,310,370,430,490,550,610,670,730,790,]
-lista_y=[5,35,65,95,125,155,185,215,245]
+lista_x=[30,90,150,210,270,330,390,450,510,570,630,690,750]
+lista_y=[30,60,90,120,180,210,240]
 lista_bricks=[]#lista com a posição de todos os blocos
+
+#lista posições bricks inquebráveis (2)
+
+lista_x2=[150,390,630]
+lista_y2=[155]
+lista_bricks2=[]
 #definindo os novos tipos
 
 class Brick(pygame.sprite.Sprite):
@@ -184,16 +190,16 @@ class Brick2(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         condicao=True
         while condicao:
-            lista_par=[] #lista com as coordenadas do brick para verificar se essa esta livre
-            x= random.choice(lista_x)
-            y=random.choice(lista_y)
-            lista_par.append(x)
-            lista_par.append(y)
-            if lista_par in lista_bricks:   #Modificar caso já esteja lotado
+            lista_par2=[] #lista com as coordenadas do brick para verificar se essa esta livre
+            x= random.choice(lista_x2)
+            y=random.choice(lista_y2)
+            lista_par2.append(x)
+            lista_par2.append(y)
+            if lista_par2 in lista_bricks2:   #Modificar caso já esteja lotado
                 condicao=True
             else:
                 condicao=False
-                lista_bricks.append(lista_par)
+                lista_bricks2.append(lista_par2)
   
         self.rect.x = x
         self.rect.y = y
@@ -391,7 +397,8 @@ for i in range(50):
     all_bricks.add(brick)
     all_sprites.add(brick)
 
-for j in range(25):
+rangej= len(lista_x2)*len(lista_y2) #número de bricks 2 (inquebráveis que serão colocados)
+for j in range(rangej):
     brick2=Brick2(brick2_img)
     all_bricks_2.add(brick2)
     all_sprites.add(brick2)
@@ -536,6 +543,23 @@ while game:
 
                     elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
                         ball.speedy=-ball.speedy
+
+                elif ball_speedx==0 and ball_speedy!=0:
+                    print('entrou')
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        print('caiu')
+                        ball.speedx=-ball.speedx
+                    else:
+                        ball.speedx=-ball.speedx
+                        
     
 
     hits_ball_brick2=pygame.sprite.groupcollide(all_balls, all_bricks_2, False, False, pygame.sprite.collide_mask)
@@ -608,15 +632,29 @@ while game:
                 elif ball_speedx>0 and ball_speedy>0:
                     if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
                         ball.speedx = -ball.speedx
-
-                
+                        
                     elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
                         ball.speedy=-ball.speedy
                         ball.speedx=-ball.speedx
 
                     elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
                         ball.speedy=-ball.speedy
-            
+
+                elif ball_speedx==0 and ball_speedy!=0:
+                    print('entrou')
+                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy = -ball.speedy
+                        ball.speedx = -ball.speedx
+                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                        print('caiu')
+                        ball.speedy=-ball.speedy
+                
+                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
+                        print('caiu')
+                        ball.speedx=-ball.speedx
+                    else:
+                        ball.speedx=-ball.speedx
             brick=Brick(brick2_1_img)
             all_bricks_2_1.add(brick)
             all_bricks_2.remove(brick)
