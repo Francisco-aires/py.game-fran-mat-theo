@@ -567,37 +567,37 @@ while game:
     brick2_center = brick2.rect.centerx
 
     for ball, bricks2_hit in hits_ball_brick2.items():
-        ball_left=ball.rect.left
-        ball_right=ball.rect.right
-        ball_top=ball.rect.top
-        ball_bottom=ball.rect.bottom
-        ball_speedx=ball.speedx
-        ball_speedy=ball.speedy
+        ball_left = ball.rect.left
+        ball_right = ball.rect.right
+        ball_top = ball.rect.top
+        ball_bottom = ball.rect.bottom
+        ball_speedx = ball.speedx
+        ball_speedy = ball.speedy
         for brick in bricks2_hit:
             
-            brick_left=brick.rect.left
-            brick_right=brick.rect.right
-            brick_top=brick.rect.top
-            brick_bottom=brick.rect.bottom
+            brick_left = brick.rect.left
+            brick_right = brick.rect.right
+            brick_top = brick.rect.top
+            brick_bottom = brick.rect.bottom
 
             
          
 
             #verifia se a colisão foi diferente
-            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
+            if ball_left >= brick_left and ball_right <= brick_right: #Colisão em baixo ou em cima
                 # A colisão é mais provavelmente superior ou inferior
                 ball.speedy = -ball.speedy
-            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
+            elif ball_bottom <= brick_bottom and ball_top >= brick_top:
                 # A colisão é mais provavelmente lateral
                 ball.speedx = -ball.speedx
             else:
                 if ball_speedx>0 and ball_speedy<0:
                     print('entrou')
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                    if ball_right < brick_left+ball.rect.width and ball_top > brick_bottom-ball.rect.height:
                         print('caiu')
                         ball.speedy = -ball.speedy
                         ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
+                    elif ball_left > brick_right - ball.rect.width and ball_top > brick_bottom-ball.rect.height:
                         print('caiu')
                         ball.speedy=-ball.speedy
                 
