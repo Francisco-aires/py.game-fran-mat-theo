@@ -580,35 +580,6 @@ all_balls=pygame.sprite.Group()
 all_powers = pygame.sprite.Group()
 all_bullets = pygame.sprite.Group()
 
-#Criando os Bricks
-for i in range(30):
-    brick=Brick(brick_img)
-    all_bricks.add(brick)
-    all_sprites.add(brick)
-
-
-for j in range(10):
-    brick2=Brick2(brick2_img)
-    all_bricks_2.add(brick2)
-    all_sprites.add(brick2)
-
-
-for m in range(10):
-    brick3=Brick3(brick3_img)
-    all_bricks_3.add(brick3)
-    all_sprites.add(brick3)
-
-#Barrinha criada
-bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
-all_sprites.add(bar)
-
-condicao_hit_ball_bar=0
-
-#bolinhaaaaaaaaaaaaaa
-ball = Ball(ball_img)
-all_sprites.add(ball)
-all_balls.add(ball)
-
 
 tela_inicio(window)
 
@@ -625,158 +596,197 @@ GAMEOVER = 2
 
 state = PLAYING
 
+condicao_jogo=0
+
 lives=3
 score = 0
 #========loop principal========
-while state!=DONE:
-
-    clock.tick(FPS)
-    # ----- Trata eventos
-    for event in pygame.event.get():
-
-        # ----- Verifica consequências
-        if event.type == pygame.QUIT:
-            state = DONE
-
-    # Captura as teclas pressionadas uma vez por frame
-    keys = pygame.key.get_pressed()
-
-    # ----- Atualiza estado de jogo
-
-    #atualiza posições (barra e bola)
-    all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
-    all_bricks_2.update()
-    all_bricks_2_1.update()
-    all_bricks_3.update()
-    bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
-    ball.update() #bolinha movendoo
-    all_powers.update()
-    #verifica se houve colisão
-    # colizao da bolinha X bloco
+while condicao_jogo<3:
+    lista_bricks=[]
     
-    hits_ball_brick = pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
-    for ball, bricks_hit in hits_ball_brick.items():
-        for brick in bricks_hit:
-            if check_collision(ball, brick):
-                score += 100
-    
-    hits_ball_brick2 = pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
-    for ball, bricks2_hit in hits_ball_brick2.items():
-        for brick in bricks2_hit:
-            if check_collision(ball, brick):
-                score += 200
-                brick_2_1 = Brick2_1(brick2_1_img, brick.rect.x, brick.rect.y)
-                all_bricks_2_1.add(brick_2_1)
-                all_sprites.add(brick_2_1)
+    if state==GAMEOVER:
+        state=PLAYING
+        lives=3
+        score=0
+        all_sprites.empty()
+        all_bricks.empty()
+        all_bricks_2.empty()
+        all_bricks_2_1.empty()
+        all_bricks_3.empty()
+        all_balls.empty()
+  
         
+            #Barrinha criada
+    bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
+    all_sprites.add(bar)
+
+    condicao_hit_ball_bar=0
+
+    #bolinhaaaaaaaaaaaaaa
+    ball = Ball(ball_img)
+    all_sprites.add(ball)
+    all_balls.add(ball)
+   
+    for i in range(30):
+        brick=Brick(brick_img)
+        all_bricks.add(brick)
+        all_sprites.add(brick)
+
+
+    for j in range(10):
+        brick2=Brick2(brick2_img)
+        all_bricks_2.add(brick2)
+        all_sprites.add(brick2)
+
+
+    for m in range(10):
+        brick3=Brick3(brick3_img)
+        all_bricks_3.add(brick3)
+        all_sprites.add(brick3)
+
+    while state!=DONE and state!=GAMEOVER:
+
+        clock.tick(FPS)
+        # ----- Trata eventos
+        for event in pygame.event.get():
+
+            # ----- Verifica consequências
+            if event.type == pygame.QUIT:
+                state = DONE
+                condicao_jogo=5
+
+        # Captura as teclas pressionadas uma vez por frame
+        keys = pygame.key.get_pressed()
+
+        # ----- Atualiza estado de jogo
+
+        #atualiza posições (barra e bola)
+        all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
+        all_bricks_2.update()
+        all_bricks_2_1.update()
+        all_bricks_3.update()
+        bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
+        ball.update() #bolinha movendoo
+        all_powers.update()
+        #verifica se houve colisão
+        # colizao da bolinha X bloco
+        
+        hits_ball_brick = pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
+        for ball, bricks_hit in hits_ball_brick.items():
+            for brick in bricks_hit:
+                if check_collision(ball, brick):
+                    score += 100
+        
+        hits_ball_brick2 = pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
+        for ball, bricks2_hit in hits_ball_brick2.items():
+            for brick in bricks2_hit:
+                if check_collision(ball, brick):
+                    score += 200
+                    brick_2_1 = Brick2_1(brick2_1_img, brick.rect.x, brick.rect.y)
+                    all_bricks_2_1.add(brick_2_1)
+                    all_sprites.add(brick_2_1)
+            
+            
+
+        hits_ball_brick3 = pygame.sprite.groupcollide(all_balls, all_bricks_3, False, True, pygame.sprite.collide_mask)
+        for ball, bricks_hit3 in hits_ball_brick3.items():
+            for brick in bricks_hit3:
+                if check_collision(ball, brick):
+                    score += 100
+                    power_type = random.choice(['expand_bar', 'extra_life', 'slow_ball', 'fast_ball','d_bar'])
+                    if power_type == 'expand_bar':
+                        power = PowerUp(power_expand_bar_img, brick.rect.x, brick.rect.y, 'expand_bar')
+                    elif power_type == 'extra_life':
+                        power = PowerUp(power_extra_life_img, brick.rect.x, brick.rect.y, 'extra_life')
+                    elif power_type == 'slow_ball':
+                        power = PowerUp(power_slow_ball_img, brick.rect.x, brick.rect.y, 'slow_ball')
+                    elif power_type == 'fast_ball':
+                        power = PowerUp(power_fast_ball_img, brick.rect.x, brick.rect.y, 'fast_ball')
+                    elif power_type == 'd_bar':
+                        power = PowerUp(power_d_bar_img , brick.rect.x, brick.rect.y, 'd_bar')
+                    all_powers.add(power)
+                    all_sprites.add(power)
+
+
+        hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
+        for ball, bricks_hit in hits_ball_brick_2_1.items():
+            for brick in bricks_hit:
+                if check_collision(ball, brick):
+                    score += 200
+
+        # colizao do poder
+        hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
+        for power in hits_power_bar:
+            apply_power(power)
+                    
         
 
-    hits_ball_brick3 = pygame.sprite.groupcollide(all_balls, all_bricks_3, False, True, pygame.sprite.collide_mask)
-    for ball, bricks_hit3 in hits_ball_brick3.items():
-        for brick in bricks_hit3:
-            if check_collision(ball, brick):
-                score += 100
-                power_type = random.choice(['expand_bar', 'extra_life', 'slow_ball', 'fast_ball','d_bar'])
-                if power_type == 'expand_bar':
-                    power = PowerUp(power_expand_bar_img, brick.rect.x, brick.rect.y, 'expand_bar')
-                elif power_type == 'extra_life':
-                    power = PowerUp(power_extra_life_img, brick.rect.x, brick.rect.y, 'extra_life')
-                elif power_type == 'slow_ball':
-                    power = PowerUp(power_slow_ball_img, brick.rect.x, brick.rect.y, 'slow_ball')
-                elif power_type == 'fast_ball':
-                    power = PowerUp(power_fast_ball_img, brick.rect.x, brick.rect.y, 'fast_ball')
-                elif power_type == 'd_bar':
-                    power = PowerUp(power_d_bar_img , brick.rect.x, brick.rect.y, 'd_bar')
-                all_powers.add(power)
-                all_sprites.add(power)
+        # colizao da barrinha X bolinha
+        hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
+
+        if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
+            ball.speedy = -abs(ball.speedy)
+            if ball.speedx>0:
+                if bar.speedx > 0:
+                    ball.speedx = bar.speedx
+                elif bar.speedx < 0:
+                    ball.speedx=ball.speedx+bar.speedx+2
+                else:
+                    ball.speedx = ball.speedx
+            elif ball.speedx<0:
+                if bar.speedx < 0:
+                    ball.speedx = bar.speedx
+                elif bar.speedx > 0:
+                    ball.speedx=ball.speedx+bar.speedx-2
+                else:
+                    ball.speedx = ball.speedx
+            elif ball.speedx==0:
+                if bar.speedx < 0:
+                    ball.speedx = bar.speedx
+                elif bar.speedx > 0:
+                    ball.speedx= bar.speedx
+                else:
+                    ball.speedx = ball.speedx
 
 
-    hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
-    for ball, bricks_hit in hits_ball_brick_2_1.items():
-        for brick in bricks_hit:
-            if check_collision(ball, brick):
-                score += 200
+        if ball.rect.bottom >= HEIGHT: 
+            lives-=1
 
-    # colizao do poder
-    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
-    for power in hits_power_bar:
-        apply_power(power)
-                
-    
+        # ----- Gera saídas
+        window.fill((0,0,0))
+        # esta linha é para desenhar a barra
+        window.blit(bar.image, bar.rect)
+        # Adicione aqui o desenho da bola # adcionei
+        window.blit(ball.image, ball.rect) 
+        # ----- Desenhando bricks
+        all_bricks.draw(window)
 
-    # colizao da barrinha X bolinha
-    hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
+        all_bricks_2.draw(window)
 
-    if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
-        ball.speedy = -abs(ball.speedy)
-        if ball.speedx>0:
-            if bar.speedx > 0:
-                ball.speedx = bar.speedx
-            elif bar.speedx < 0:
-                ball.speedx=ball.speedx+bar.speedx+2
-            else:
-                ball.speedx = ball.speedx
-        elif ball.speedx<0:
-            if bar.speedx < 0:
-                ball.speedx = bar.speedx
-            elif bar.speedx > 0:
-                ball.speedx=ball.speedx+bar.speedx-2
-            else:
-                ball.speedx = ball.speedx
-        elif ball.speedx==0:
-            if bar.speedx < 0:
-                ball.speedx = bar.speedx
-            elif bar.speedx > 0:
-                ball.speedx= bar.speedx
-            else:
-                ball.speedx = ball.speedx
+        all_bricks_2_1.draw(window)
+
+        all_bricks_3.draw(window)
+
+        all_powers.draw(window)
 
 
-    if ball.rect.bottom >= HEIGHT: 
-        lives-=1
-    
-    if lives==0:
-        state = GAMEOVER
-    if state == GAMEOVER:
-        if tela_Gameover(window) == "REINICIAR":
-            state = PLAYING
-            iniciar_jogo()
-           
+        # Desenhando as vidas
+        font = pygame.font.Font('assets/font/PressStart2P.ttf', 28)
+        text_surface =font.render(chr(9829) * lives, True, (255, 0, 0))
+        text_rect = text_surface.get_rect()
+        text_rect.bottomleft = (10, HEIGHT - 10)
+        window.blit(text_surface, text_rect)
+        # desenhando a pontuação
+        text_surface = pygame.font.Font('assets/font/PressStart2P.ttf', 24).render("{:08d}".format(score), True, (255, 255, 0))
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (WIDTH / 2,  10)
+        window.blit(text_surface, text_rect)
         
+        pygame.display.update() # mostra o novo frame para o jogador
 
-
-        
-
-    # ----- Gera saídas
-    window.fill((0,0,0))
-    # esta linha é para desenhar a barra
-    window.blit(bar.image, bar.rect)
-    # Adicione aqui o desenho da bola # adcionei
-    window.blit(ball.image, ball.rect) 
-    # ----- Desenhando bricks
-    all_bricks.draw(window)
-
-    all_bricks_2.draw(window)
-
-    all_bricks_2_1.draw(window)
-
-    all_bricks_3.draw(window)
-
-    all_powers.draw(window)
-
-
-    # Desenhando as vidas
-    font = pygame.font.Font('assets/font/PressStart2P.ttf', 28)
-    text_surface =font.render(chr(9829) * lives, True, (255, 0, 0))
-    text_rect = text_surface.get_rect()
-    text_rect.bottomleft = (10, HEIGHT - 10)
-    window.blit(text_surface, text_rect)
-    # desenhando a pontuação
-    text_surface = pygame.font.Font('assets/font/PressStart2P.ttf', 24).render("{:08d}".format(score), True, (255, 255, 0))
-    text_rect = text_surface.get_rect()
-    text_rect.midtop = (WIDTH / 2,  10)
-    window.blit(text_surface, text_rect)
-    
-    pygame.display.update() # mostra o novo frame para o jogador
+        if lives==0:
+            state = GAMEOVER
+            if tela_Gameover(window) != "REINICIAR":
+                condicao_jogo=5
 #======Finalização=======
 pygame.quit()
