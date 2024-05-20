@@ -146,8 +146,7 @@ def tela_Gameover(window):
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                running = False
-                state = PLAYING
+                return "REINICIAR"
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de Game Over
         font = pygame.font.Font(None, 36)  # Define a fonte
@@ -192,6 +191,44 @@ def tela_fim(window):
         # Desenha os textos na tela
         window.blit(texto_inicio, inicio_rect)
         window.blit(instrucao, instrucao_rect)
+def iniciar_jogo():
+    global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3
+    global all_balls, all_powers, all_bullets, bar, ball, score, lives, state, FPS
+
+    all_sprites = pygame.sprite.Group()
+    all_bricks = pygame.sprite.Group()  # brick básico
+    all_bricks_2 = pygame.sprite.Group()  # brick 2
+    all_bricks_2_1 = pygame.sprite.Group()  # brick 2 meio quebrado quebrado
+    all_bricks_3 = pygame.sprite.Group()  # brick 3(poder)
+    all_balls = pygame.sprite.Group()
+    all_powers = pygame.sprite.Group()
+    all_bullets = pygame.sprite.Group()
+
+    for i in range(30):
+        brick = Brick(brick_img)
+        all_bricks.add(brick)
+        all_sprites.add(brick)
+    for j in range(10):
+        brick2 = Brick2(brick2_img)
+        all_bricks_2.add(brick2)
+        all_sprites.add(brick2)
+    for m in range(10):
+        brick3 = Brick3(brick3_img)
+        all_bricks_3.add(brick3)
+        all_sprites.add(brick3)
+
+    bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50)
+    all_sprites.add(bar)
+
+    ball = Ball(ball_img)
+    all_sprites.add(ball)
+    all_balls.add(ball)
+
+    score = 0
+    lives = 3
+    FPS = 60
+    state = "PLAYING"
+
 
 ############### carregar sons #####################
 # Carrega o som de colisão
@@ -366,6 +403,83 @@ class Bar(pygame.sprite.Sprite):
             self.real_x = self.rect.x # sintonizar com a posicao real
 
 
+
+    
+
+
+class Powers(pygame.sprite.Sprite):
+    def __init__(self, dic_power_img, center, bottom):
+        pygame.sprite.Sprite.__init__(self)
+        self.power_type = random.choice(list(dic_power_img.keys()))
+        self.image = dic_power_img[self.power_type]
+        self.rect = self.image.get_rect()
+        self.rect.centerx = center
+        self.rect.bottom = bottom
+        self.speedy = 2
+
+    def update(self):
+        self.rect.y += self.speedy
+        if self.rect.bottom < 0:
+            self.kill()
+
+    def power_up(self, dic_power_numeros):
+        return dic_power_numeros[self.power_type]
+   
+class Timer:
+    def __init__(self):
+        self.power_timers = {}
+
+    def update_powers(self):
+        current_time = pygame.time.get_ticks()
+        for power, end_time in list(self.power_timers.items()):
+            if current_time > end_time:
+                self.deactivate_power(power)
+                del self.power_timers[power]
+
+    def activate_power(self, power):
+        current_time = pygame.time.get_ticks()
+        duration = 5000  # Duração de 5 segundos para todos os poderes
+        end_time = current_time + duration
+        self.power_timers[power] = end_time
+
+        if power == 41:
+            self.FPS = 45
+        elif power == 42:
+            self.FPS = 75
+        elif power == 43:
+            for _ in range(2):
+                ball = Ball(ball_img)  # Assumindo que você tem a imagem da bola definida
+                all_sprites.add(ball)
+                all_balls.add(ball)
+        elif power == 44:
+            pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
+        elif power == 45:
+            pygame.sprite.groupcollide(all_balls, all_bricks, False, False, pygame.sprite.collide_mask)
+        elif power == 46:
+            self.BAR_WIDTH = 175
+        elif power == 47:
+            self.BAR_WIDTH = 225
+        elif power == 48:
+            brick_center = brick.rect.centerx  # Supondo que você tem o brick definido
+            brick_bottom = brick.rect.bottom
+            bullet = Bullets(bullets_img, brick_center, brick_bottom)  # Assumindo que você tem a imagem do bullet definida
+            all_sprites.add(bullet)
+            all_bullets.add(bullet)
+
+    def deactivate_power(self, power):
+        if power == 41 or power == 42:
+            self.FPS = 60
+        elif power == 43:
+            while len(all_balls) > 1:
+                ball = all_balls.sprites()[0]
+                ball.kill()
+        elif power == 44 or power == 45:
+            pygame.sprite.groupcollide(all_balls, all_bricks_2, False, False, pygame.sprite.collide_mask)
+        elif power == 46 or power == 47:
+            self.BAR_WIDTH = 200
+        elif power == 48:
+            for bullet in all_bullets:
+                bullet.kill()
 
 
                     
@@ -550,7 +664,10 @@ while state!=DONE:
     if lives==0:
         state = GAMEOVER
     if state == GAMEOVER:
-        tela_Gameover(window)
+        if tela_Gameover(window) == "REINICIAR":
+           iniciar_jogo()
+           state = PLAYING
+
         
 
     
@@ -582,7 +699,7 @@ while state!=DONE:
     text_rect.bottomleft = (10, HEIGHT - 10)
     window.blit(text_surface, text_rect)
     # desenhando a pontuação
-    text_surface = pygame.font.Font('assets/font/PressStart2P.ttf', 28).render("{:08d}".format(score), True, (255, 255, 0))
+    text_surface = pygame.font.Font('assets/font/PressStart2P.ttf', 24).render("{:08d}".format(score), True, (255, 255, 0))
     text_rect = text_surface.get_rect()
     text_rect.midtop = (WIDTH / 2,  10)
     window.blit(text_surface, text_rect)
