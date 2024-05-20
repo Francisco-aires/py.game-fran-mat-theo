@@ -660,9 +660,9 @@ while state!=DONE:
         state = GAMEOVER
     if state == GAMEOVER:
         if tela_Gameover(window) == "REINICIAR":
-           iniciar_jogo()
-           state = PLAYING
-
+            state = PLAYING
+            iniciar_jogo()
+           
         
 
     
