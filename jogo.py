@@ -445,33 +445,41 @@ class Bar(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speedx = 0
-        self.real_x = x  # pra barrinha ir mais devagar
+        self.real_x = x
+        self.shoot_bullets = False
         self.power_timer = 0
         self.original_width = self.rect.width
-
+        self.last_shot = pygame.time.get_ticks()  # Para controlar a cadência de tiro
 
     def update(self, keys):
-        self.speedx = 0  # Reseta a velocidade cada vez que o update é chamado para evitar movimento contínuo
+        self.speedx = 0
         if keys[pygame.K_LEFT]:
             self.speedx = -7
         if keys[pygame.K_RIGHT]:
             self.speedx = 7
         self.real_x += self.speedx
-        self.rect.x = int(self.real_x) #tranformar em numero inteiro
-
-        # Mantém a barra dentro da tela
+        self.rect.x = int(self.real_x)
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
-            self.real_x = self.rect.x # sintonizar com a posicao real
+            self.real_x = self.rect.x
         if self.rect.left < 0:
             self.rect.left = 0
-            self.real_x = self.rect.x # sintonizar com a posicao real
+            self.real_x = self.rect.x
 
         # Verificar e atualizar o temporizador dos poderes
         if self.power_timer > 0:
             self.power_timer -= 1
         else:
             self.reset_powers()
+
+            # Lógica para disparar balas
+        if self.shoot_bullets:
+            now = pygame.time.get_ticks()
+            if now - self.last_shot > 500:  # Intervalo de 500ms entre tiros
+                self.last_shot = now
+                bullet = Bullets(bullets_img, self.rect.top, self.rect.centerx)
+                all_bullets.add(bullet)
+                all_sprites.add(bullet)
 
     def reset_powers(self):
         self.image = pygame.transform.scale(bar_img, (self.original_width, BAR_HEIGHT))
@@ -559,24 +567,16 @@ class Timer:
 
                     
 class Bullets(pygame.sprite.Sprite):
-    # Construtor da classe.
     def __init__(self, img, bottom, centerx):
-        # Construtor da classe mãe (Sprite).
         pygame.sprite.Sprite.__init__(self)
-
         self.image = img
         self.rect = self.image.get_rect()
-
-        # Coloca no lugar inicial definido em x, y do constutor
         self.rect.centerx = centerx
         self.rect.bottom = bottom
-        self.speedy = -10  # Velocidade fixa para cima
+        self.speedy = -1  # Velocidade fixa para cima
 
     def update(self):
-        # A bala só se move no eixo y
         self.rect.y += self.speedy
-
-        # Se o tiro passar do inicio da tela, morre.
         if self.rect.bottom < 0:
             self.kill()
 
@@ -745,7 +745,7 @@ while state!=DONE:
                 ball.speedx= bar.speedx
             else:
                 ball.speedx = ball.speedx
-    
+
 
     if ball.rect.bottom >= HEIGHT: 
         lives-=1
