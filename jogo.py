@@ -205,10 +205,11 @@ def tela_fim(window):
         window.blit(instrucao, instrucao_rect)
 
 def iniciar_jogo():
-    global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3
+    global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3, all_bricksT
     global all_balls, all_powers, all_bullets, bar, ball, score, lives, state, FPS
 
     all_sprites = pygame.sprite.Group()
+    all_bricksT=pygame.sprite.Group()
     all_bricks = pygame.sprite.Group()  # brick básico
     all_bricks_2 = pygame.sprite.Group()  # brick 2
     all_bricks_2_1 = pygame.sprite.Group()  # brick 2 meio quebrado quebrado
@@ -220,13 +221,16 @@ def iniciar_jogo():
     for i in range(30):
         brick = Brick(brick_img)
         all_bricks.add(brick)
+        all_bricksT.add(brick)
         all_sprites.add(brick)
     for j in range(10):
         brick2 = Brick2(brick2_img)
+        all_bricksT.add(brick2)
         all_bricks_2.add(brick2)
         all_sprites.add(brick2)
     for m in range(10):
         brick3 = Brick3(brick3_img)
+        all_bricksT.add(brick3)
         all_bricks_3.add(brick3)
         all_sprites.add(brick3)
 
@@ -245,7 +249,7 @@ def iniciar_jogo():
 
 ############### carregar sons #####################
 # Carrega o som de colisão
-som_colisao = pygame.mixer.Sound('sons/efeito sono - 1716236286028 (online-audio-converter.com)')
+#som_colisao = pygame.mixer.Sound('sons/efeito sono - 1716236286028 (online-audio-converter.com)')
 #        som_colisao.play() se quiser tocar
 
 # Carrega a música de fundo
@@ -267,9 +271,9 @@ lista_y3=[30,60,90,120,150,180,210]
 lista_xy_niveis=[[lista_x,lista_y],[lista_x2,lista_y2],[lista_x3,lista_y3]]
 lista_bricks=[]#lista com a posição de todos os blocos
 ######################## Backgrounds #####################
-background_1 = pygame.image.load('img/pngtree-landscape-with-mountains-forest-and-clouds-2d-game-background-image_13246432').convert()
-background_2 = pygame.image.load('img/background-2').convert()
-background_3 = pygame.image.load('img/background-3').convert()
+#background_1 = pygame.image.load('img/pngtree-landscape-with-mountains-forest-and-clouds-2d-game-background-image_13246432').convert()
+#background_2 = pygame.image.load('img/background-2').convert()
+#background_3 = pygame.image.load('img/background-3').convert()
 #Lista número de cada tipo de bloco
 lista_brick_azul=[36,20,6]
 lista_brick_vermelho=[10,18,25]
@@ -588,6 +592,7 @@ game=True
 
 #criando grupo Bricks
 all_sprites = pygame.sprite.Group()
+all_bricksT=pygame.sprite.Group() #brick básico
 all_bricks=pygame.sprite.Group() #brick básico
 all_bricks_2=pygame.sprite.Group() #brick 2
 all_bricks_2_1=pygame.sprite.Group() #brick 2 meio quebrado quebrado
@@ -627,6 +632,7 @@ while condicao_jogo<3:
         score=0
         all_sprites.empty()
         all_bricks.empty()
+        all_bricksT.empty()
         all_bricks_2.empty()
         all_bricks_2_1.empty()
         all_bricks_3.empty()
@@ -638,6 +644,7 @@ while condicao_jogo<3:
     elif state==NEXTLEVEL:
         state=PLAYING
         all_sprites.empty()
+        all_bricksT.empty()
         all_bricks.empty()
         all_bricks_2.empty()
         all_bricks_2_1.empty()
@@ -658,18 +665,21 @@ while condicao_jogo<3:
     for i in range(lista_brick_azul[condicao_jogo]):
         brick=Brick(brick_img,condicao_jogo)
         all_bricks.add(brick)
+        all_bricksT.add(brick)
         all_sprites.add(brick)
 
 
     for j in range(lista_brick_vermelho[condicao_jogo]):
         brick2=Brick2(brick2_img,condicao_jogo)
         all_bricks_2.add(brick2)
+        all_bricksT.add(brick2)
         all_sprites.add(brick2)
 
 
     for m in range(lista_brick_roxo[condicao_jogo]):
         brick3=Brick3(brick3_img,condicao_jogo)
         all_bricks_3.add(brick3)
+        all_bricksT.add(brick3)
         all_sprites.add(brick3)
 
     while state!=DONE and state!=GAMEOVER and state!=NEXTLEVEL:
@@ -690,6 +700,7 @@ while condicao_jogo<3:
 
         #atualiza posições (barra e bola)
         all_bricks.update()  # os tijolos se movam ou tenham alguma atualização
+        all_bricksT.update()
         all_bricks_2.update()
         all_bricks_2_1.update()
         all_bricks_3.update()
@@ -704,7 +715,7 @@ while condicao_jogo<3:
             for brick in bricks_hit:
                 if check_collision(ball, brick):
                     score += 100
-                all_bricks.remove(brick)
+                all_bricksT.remove(brick)
         
         hits_ball_brick2 = pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
         for ball, bricks2_hit in hits_ball_brick2.items():
@@ -712,8 +723,9 @@ while condicao_jogo<3:
                 if check_collision(ball, brick):
                     brick_2_1 = Brick2_1(brick2_1_img, brick.rect.x, brick.rect.y)
                     all_bricks_2_1.add(brick_2_1)
+                    all_bricksT.add(brick_2_1)
                     all_sprites.add(brick_2_1)
-                all_bricks.remove(brick)
+                all_bricksT.remove(brick)
 
             
             
@@ -736,7 +748,7 @@ while condicao_jogo<3:
                         power = PowerUp(power_d_bar_img , brick.rect.x, brick.rect.y, 'd_bar')
                     all_powers.add(power)
                     all_sprites.add(power)
-                all_bricks.remove(brick)
+                all_bricksT.remove(brick)
 
 
         hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
@@ -744,7 +756,7 @@ while condicao_jogo<3:
             for brick in bricks_hit:
                 if check_collision(ball, brick):
                     score += 300
-                all_bricks.remove(brick)
+                all_bricksT.remove(brick)
 
         # colizao do poder
         hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
@@ -815,7 +827,7 @@ while condicao_jogo<3:
         window.blit(text_surface, text_rect)
         
         pygame.display.update() # mostra o novo frame para o jogador
-        if len(all_bricks)==0:
+        if len(all_bricksT)==0:
             state=NEXTLEVEL
             condicao_jogo+=1
 
