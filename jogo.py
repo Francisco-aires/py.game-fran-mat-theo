@@ -550,7 +550,7 @@ while state!=DONE:
     all_powers.update()
     #verifica se houve colisão
     # colizao da bolinha X bloco
-    hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
+    
     hits_ball_brick = pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
     for ball, bricks_hit in hits_ball_brick.items():
         for brick in bricks_hit:
