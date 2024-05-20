@@ -3,12 +3,14 @@ import time
 import pygame
 import random
 
-from jogo import *
 ###########
 # assets  #
 ###########
 
-
+WIDTH=850
+HEIGHT=600
+window = pygame.display.set_mode((WIDTH,HEIGHT))
+pygame.display.set_caption('BREAKOUT INSPER')
 
 
 BRICK_WIDTH=50
