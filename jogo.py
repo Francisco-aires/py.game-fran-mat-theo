@@ -120,6 +120,8 @@ def tela_Gameover(window):
         window.blit(instrucao, instrucao_rect)
 
         pygame.display.update()
+
+        
 def tela_fim(window):
     running = True
     while running:
