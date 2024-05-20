@@ -75,9 +75,7 @@ power_slow_ball_img = pygame.transform.scale(power_slow_ball_img, (POWER_WIDTH, 
 # bola rapida
 power_fast_ball_img = pygame.image.load('Img/42-Breakout-Tiles.png').convert_alpha()
 power_fast_ball_img = pygame.transform.scale(power_fast_ball_img, (POWER_WIDTH, POWER_HEIGHT))
-# atirar
-power_shoot_bullets_img = pygame.image.load('Img/48-Breakout-Tiles.png').convert_alpha()
-power_shoot_bullets_img = pygame.transform.scale(power_shoot_bullets_img, (POWER_WIDTH, POWER_HEIGHT))
+
 
 
 # telinhaaaa de inicio funçao
@@ -298,9 +296,6 @@ def apply_power(power):
         ball.speedx *= 1.5
         ball.speedy *= 1.5
         bar.power_timer = power_duration
-    elif power.effect == 'shoot_bullets':
-        bar.shoot_bullets = True
-        bar.power_timer = power_duration
 
 
 
@@ -407,7 +402,6 @@ class Ball(pygame.sprite.Sprite):
         self.speedx = 0 # velocidade inicial
         self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
         self.condicao_hit_ball_bar=0
-        self.shoot_bullets = False
 
     def update (self):
         # Atualiza as posições reais com as velocidades
@@ -430,11 +424,7 @@ class Ball(pygame.sprite.Sprite):
             self.speedx=0
             self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
             self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
-    
-        if self.shoot_bullets and keys[pygame.K_SPACE]:
-            bullet = Bullets(bullets_img, self.rect.top, self.rect.centerx)
-            all_bullets.add(bullet)
-            all_sprites.add(bullet)       
+       
 
 
 class Bar(pygame.sprite.Sprite):
@@ -446,7 +436,6 @@ class Bar(pygame.sprite.Sprite):
         self.rect.y = y
         self.speedx = 0
         self.real_x = x
-        self.shoot_bullets = False
         self.power_timer = 0
         self.original_width = self.rect.width
         self.last_shot = pygame.time.get_ticks()  # Para controlar a cadência de tiro
@@ -472,19 +461,11 @@ class Bar(pygame.sprite.Sprite):
         else:
             self.reset_powers()
 
-            # Lógica para disparar balas
-        if self.shoot_bullets:
-            now = pygame.time.get_ticks()
-            if now - self.last_shot > 500:  # Intervalo de 500ms entre tiros
-                self.last_shot = now
-                bullet = Bullets(bullets_img, self.rect.top, self.rect.centerx)
-                all_bullets.add(bullet)
-                all_sprites.add(bullet)
 
     def reset_powers(self):
         self.image = pygame.transform.scale(bar_img, (self.original_width, BAR_HEIGHT))
         self.rect = self.image.get_rect(center=self.rect.center)
-        self.shoot_bullets = False
+
 
 
     
@@ -700,8 +681,6 @@ while state!=DONE:
                     power = PowerUp(power_slow_ball_img, brick.rect.x, brick.rect.y, 'slow_ball')
                 elif power_type == 'fast_ball':
                     power = PowerUp(power_fast_ball_img, brick.rect.x, brick.rect.y, 'fast_ball')
-                elif power_type == 'shoot_bullets':
-                    power = PowerUp(power_shoot_bullets_img, brick.rect.x, brick.rect.y, 'shoot_bullets')
                 all_powers.add(power)
                 all_sprites.add(power)
 
