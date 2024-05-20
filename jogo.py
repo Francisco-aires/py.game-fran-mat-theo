@@ -63,7 +63,7 @@ coracao_img=pygame.transform.scale(coracao_img, (CORACAO_WIDGHT,CORACAO_HEIGHT))
 #imagens dos poderes
 POWER_WIDTH = 30
 POWER_HEIGHT = 30
-power_img = pygame.image.load('Img/power.png').convert_alpha()
+power_img = pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
 power_img = pygame.transform.scale(power_img, (POWER_WIDTH, POWER_HEIGHT))
 
 # telinhaaaa de inicio funçao
@@ -244,6 +244,35 @@ pygame.mixer.music.load('sons/name.mp3')
 lista_x=[30,90,150,210,270,510,570,630,690,750]
 lista_y=[30,60,90,120,180,210,240]
 lista_bricks=[]#lista com a posição de todos os blocos
+
+######################### poderessssss  ########################
+
+
+
+class PowerUp(pygame.sprite.Sprite):
+    def __init__(self, img, x, y, effect):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speedy = 3  # Velocidade de queda do poder
+        self.effect = effect  # Tipo de efeito do poder
+
+    def update(self):
+        self.rect.y += self.speedy
+        if self.rect.top > HEIGHT:
+            self.kill()
+
+def apply_power(power):
+    global bar, lives
+    if power.effect == 'expand_bar':
+        bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 2, BAR_HEIGHT))
+        bar.rect = bar.image.get_rect(center=bar.rect.center)
+    elif power.effect == 'extra_life':
+        lives += 1
+
+
 
 
 
@@ -616,8 +645,9 @@ while state!=DONE:
         for brick in bricks_hit3:
             if check_collision(ball, brick):
                 score += 100
-
-    # colizao do poder
+                power = PowerUp(power_img, brick.rect.x, brick.rect.y, 'expand_bar')
+                all_powers.add(power)
+                all_sprites.add(power)
 
 
     hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
@@ -626,7 +656,10 @@ while state!=DONE:
             if check_collision(ball, brick):
                 score += 200
 
-
+    # colizao do poder
+    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
+    for power in hits_power_bar:
+        apply_power(power)
                 
     
 
