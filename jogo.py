@@ -187,8 +187,7 @@ def tela_fim(window):
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                running = False
-                state = PLAYING
+                return False
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
         font = pygame.font.Font(None, 36)  # Define a fonte
@@ -256,13 +255,26 @@ pygame.mixer.music.load('sons/Star Wars - Battle of the Heroes.mp3')
 
 #---------- Inicia estrutura de dados
 #lista posições bricks
-lista_x=[30,90,150,210,270,510,570,630,690,750]
+lista_x=[30,90,150,210,570,630,690,750]  
 lista_y=[30,60,90,120,180,210,240]
+
+lista_x2=[50,110,310,370,430,490,690,750]
+lista_y2=[30,60,90,120,150,180,210]
+
+lista_x3=[215,275,335,395,455,515,575,635]
+lista_y3=[30,60,90,120,150,180,210]
+
+lista_xy_niveis=[[lista_x,lista_y],[lista_x2,lista_y2],[lista_x3,lista_y3]]
 lista_bricks=[]#lista com a posição de todos os blocos
 ######################## Backgrounds #####################
 background_1 = pygame.image.load('img/pngtree-landscape-with-mountains-forest-and-clouds-2d-game-background-image_13246432').convert()
 background_2 = pygame.image.load('img/background-2').convert()
 background_3 = pygame.image.load('img/background-3').convert()
+#Lista número de cada tipo de bloco
+lista_brick_azul=[36,20,6]
+lista_brick_vermelho=[10,18,25]
+lista_brick_roxo=[10,18,25]
+
 ######################### poderessssss  ########################
 
 
@@ -309,7 +321,7 @@ def apply_power(power):
 
 
 class Brick(pygame.sprite.Sprite):
-    def __init__(self,img):
+    def __init__(self,img,condicao_jogo):
         #Construtor da classe mãe (Sprite)
         pygame.sprite.Sprite.__init__(self)
         self.image = img
@@ -317,8 +329,8 @@ class Brick(pygame.sprite.Sprite):
         condicao=True
         while condicao:
             lista_par=[] #lista com as coordenadas do brick para verificar se essa esta livre
-            x= random.choice(lista_x)
-            y=random.choice(lista_y)
+            x= random.choice(lista_xy_niveis[condicao_jogo][0])
+            y=random.choice(lista_xy_niveis[condicao_jogo][1])
             lista_par.append(x)
             lista_par.append(y)
             if lista_par in lista_bricks:   #Modificar caso já esteja lotado
@@ -335,7 +347,7 @@ class Brick(pygame.sprite.Sprite):
 
 
 class Brick2(pygame.sprite.Sprite):
-    def __init__(self,img):
+    def __init__(self,img,condicao_jogo):
         #Construtor da classe mãe (Sprite)
         pygame.sprite.Sprite.__init__(self)
         self.image = img
@@ -343,8 +355,8 @@ class Brick2(pygame.sprite.Sprite):
         condicao=True
         while condicao:
             lista_par2=[] #lista com as coordenadas do brick para verificar se essa esta livre
-            x= random.choice(lista_x)
-            y=random.choice(lista_y)
+            x= random.choice(lista_xy_niveis[condicao_jogo][0])
+            y=random.choice(lista_xy_niveis[condicao_jogo][1])
             lista_par2.append(x)
             lista_par2.append(y)
             if lista_par2 in lista_bricks:   #Modificar caso já esteja lotado
@@ -372,7 +384,7 @@ class Brick2_1(pygame.sprite.Sprite):
 
 
 class Brick3(pygame.sprite.Sprite):
-    def __init__(self,img):
+    def __init__(self,img,condicao_jogo):
         #Construtor da classe mãe (Sprite)
         pygame.sprite.Sprite.__init__(self)
         self.image = img
@@ -380,8 +392,8 @@ class Brick3(pygame.sprite.Sprite):
         condicao=True
         while condicao:
             lista_par3=[] #lista com as coordenadas do brick para verificar se essa esta livre
-            x= random.choice(lista_x)
-            y=random.choice(lista_y)
+            x= random.choice(lista_xy_niveis[condicao_jogo][0])
+            y=random.choice(lista_xy_niveis[condicao_jogo][1])
             lista_par3.append(x)
             lista_par3.append(y)
             if lista_par3 in lista_bricks:   #Modificar caso já esteja lotado
@@ -402,7 +414,7 @@ class Ball(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = img  # Define a imagem da bola
         self.rect = self.image.get_rect()
-        self.rect.x = 500
+        self.rect.x = 425
         self.rect.y = 250
         self.mask = pygame.mask.from_surface(self.image)
         self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
@@ -597,6 +609,7 @@ FPS = 60
 DONE = 0
 PLAYING = 1
 GAMEOVER = 2
+NEXTLEVEL=3
 
 state = PLAYING
 
@@ -621,6 +634,17 @@ while condicao_jogo<3:
   
         
             #Barrinha criada
+    
+    elif state==NEXTLEVEL:
+        state=PLAYING
+        all_sprites.empty()
+        all_bricks.empty()
+        all_bricks_2.empty()
+        all_bricks_2_1.empty()
+        all_bricks_3.empty()
+        all_balls.empty()
+      
+
     bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
     all_sprites.add(bar)
 
@@ -631,24 +655,24 @@ while condicao_jogo<3:
     all_sprites.add(ball)
     all_balls.add(ball)
    
-    for i in range(30):
-        brick=Brick(brick_img)
+    for i in range(lista_brick_azul[condicao_jogo]):
+        brick=Brick(brick_img,condicao_jogo)
         all_bricks.add(brick)
         all_sprites.add(brick)
 
 
-    for j in range(10):
-        brick2=Brick2(brick2_img)
+    for j in range(lista_brick_vermelho[condicao_jogo]):
+        brick2=Brick2(brick2_img,condicao_jogo)
         all_bricks_2.add(brick2)
         all_sprites.add(brick2)
 
 
-    for m in range(10):
-        brick3=Brick3(brick3_img)
+    for m in range(lista_brick_roxo[condicao_jogo]):
+        brick3=Brick3(brick3_img,condicao_jogo)
         all_bricks_3.add(brick3)
         all_sprites.add(brick3)
 
-    while state!=DONE and state!=GAMEOVER:
+    while state!=DONE and state!=GAMEOVER and state!=NEXTLEVEL:
 
         clock.tick(FPS)
         # ----- Trata eventos
@@ -680,15 +704,17 @@ while condicao_jogo<3:
             for brick in bricks_hit:
                 if check_collision(ball, brick):
                     score += 100
+                all_bricks.remove(brick)
         
         hits_ball_brick2 = pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
         for ball, bricks2_hit in hits_ball_brick2.items():
             for brick in bricks2_hit:
                 if check_collision(ball, brick):
-                    score += 200
                     brick_2_1 = Brick2_1(brick2_1_img, brick.rect.x, brick.rect.y)
                     all_bricks_2_1.add(brick_2_1)
                     all_sprites.add(brick_2_1)
+                all_bricks.remove(brick)
+
             
             
 
@@ -710,13 +736,15 @@ while condicao_jogo<3:
                         power = PowerUp(power_d_bar_img , brick.rect.x, brick.rect.y, 'd_bar')
                     all_powers.add(power)
                     all_sprites.add(power)
+                all_bricks.remove(brick)
 
 
         hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
         for ball, bricks_hit in hits_ball_brick_2_1.items():
             for brick in bricks_hit:
                 if check_collision(ball, brick):
-                    score += 200
+                    score += 300
+                all_bricks.remove(brick)
 
         # colizao do poder
         hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
@@ -787,10 +815,23 @@ while condicao_jogo<3:
         window.blit(text_surface, text_rect)
         
         pygame.display.update() # mostra o novo frame para o jogador
+        if len(all_bricks)==0:
+            state=NEXTLEVEL
+            condicao_jogo+=1
 
         if lives==0:
             state = GAMEOVER
             if tela_Gameover(window) != "REINICIAR":
                 condicao_jogo=5
+        if condicao_jogo==3:
+            if tela_fim(window)==False:
+                condicao_jogo=0
+                state=PLAYING
+            
 #======Finalização=======
+
+
+
+
 pygame.quit()
+
