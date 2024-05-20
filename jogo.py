@@ -94,6 +94,50 @@ def tela_inicio(window):
 
         pygame.display.update()  # Atualiza a tela para mostrar os textos
 
+# Funçao das colizôes
+def check_collision(ball, brick):
+    # Verifica a direção da bola
+    ball_left = ball.rect.left
+    ball_right = ball.rect.right
+    ball_top = ball.rect.top
+    ball_bottom = ball.rect.bottom
+    ball_speedx = ball.speedx
+    ball_speedy = ball.speedy
+
+    brick_left = brick.rect.left
+    brick_right = brick.rect.right
+    brick_top = brick.rect.top
+    brick_bottom = brick.rect.bottom
+
+    # Calcula a interseção dos retângulos
+    if ball_right > brick_left and ball_left < brick_right and ball_bottom > brick_top and ball_top < brick_bottom:
+        # Calcula a profundidade da colisão em cada direção
+        overlap_left = ball_right - brick_left
+        overlap_right = brick_right - ball_left
+        overlap_top = ball_bottom - brick_top
+        overlap_bottom = brick_bottom - ball_top
+
+        # Determina a direção da colisão
+        if min(overlap_left, overlap_right) < min(overlap_top, overlap_bottom):
+            # Colisão lateral
+            if overlap_left < overlap_right:
+                ball.rect.right = brick_left
+            else:
+                ball.rect.left = brick_right
+            ball.speedx = -ball.speedx
+        else:
+            # Colisão superior ou inferior
+            if overlap_top < overlap_bottom:
+                ball.rect.bottom = brick_top
+            else:
+                ball.rect.top = brick_bottom
+            ball.speedy = -ball.speedy
+
+        return True
+    return False
+
+
+
 def tela_Gameover(window):
     running = True
     while running:
@@ -515,223 +559,32 @@ while state!=DONE:
     #verifica se houve colisão
     # colizao da bolinha X bloco
     hits_ball_brick=pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
-    
-    # colizao com o bloco inverte a bola
+    hits_ball_brick = pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
     for ball, bricks_hit in hits_ball_brick.items():
-        ball_left=ball.rect.left
-        ball_right=ball.rect.right
-        ball_top=ball.rect.top
-        ball_bottom=ball.rect.bottom
-        ball_speedx=ball.speedx
-        ball_speedy=ball.speedy
-        score += 100
         for brick in bricks_hit:
-            
-            brick_left=brick.rect.left
-            brick_right=brick.rect.right
-            brick_top=brick.rect.top
-            brick_bottom=brick.rect.bottom
-
-            
-         
-
-            #verifia se a colisão foi diferente
-            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
-                # A colisão é mais provavelmente superior ou inferior
-                ball.speedy = -ball.speedy
-            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
-            else:
-                if ball_speedx>0 and ball_speedy<0:
-                    print('entrou')
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        print('caiu')
-                        ball.speedx=-ball.speedx
-                    else:
-                        print('não caiu')
-
-                elif ball_speedx<0 and ball_speedy>0:
-                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                elif ball_speedx<0 and ball_speedy<0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                elif ball_speedx>0 and ball_speedy>0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx = -ball.speedx
-
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-                        ball.speedx=-ball.speedx
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                elif ball_speedx==0 and ball_speedy!=0:
-                    print('entrou')
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        print('caiu')
-                        ball.speedx=-ball.speedx
-                    else:
-                        ball.speedx=-ball.speedx
-                        
+            if check_collision(ball, brick):
+                score += 100
     
-
-    hits_ball_brick2=pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
-    
+    hits_ball_brick2 = pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
     for ball, bricks2_hit in hits_ball_brick2.items():
-        ball_left = ball.rect.left
-        ball_right = ball.rect.right
-        ball_top = ball.rect.top
-        ball_bottom = ball.rect.bottom
-        ball_speedx = ball.speedx
-        ball_speedy = ball.speedy
-        score += 200
         for brick in bricks2_hit:
-            
-            brick_left = brick.rect.left
-            brick_right = brick.rect.right
-            brick_top = brick.rect.top
-            brick_bottom = brick.rect.bottom
-            lista_coordenadas=[]
-
-            
-         
-
-            #verifia se a colisão foi diferente
-            if ball_left >= brick_left and ball_right <= brick_right: #Colisão em baixo ou em cima
-                # A colisão é mais provavelmente superior ou inferior
-                ball.speedy = -ball.speedy
-            elif ball_bottom <= brick_bottom and ball_top >= brick_top:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
-            else:
-                if ball_speedx>0 and ball_speedy<0:
-                    print('entrou')
-                    if ball_right < brick_left+ball.rect.width and ball_top > brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left > brick_right - ball.rect.width and ball_top > brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        print('caiu')
-                        ball.speedx=-ball.speedx
-                    else:
-                        print('não caiu')
-
-                elif ball_speedx<0 and ball_speedy>0:
-                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                elif ball_speedx<0 and ball_speedy<0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                elif ball_speedx>0 and ball_speedy>0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx = -ball.speedx
-                        
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-                        ball.speedx=-ball.speedx
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                elif ball_speedx==0 and ball_speedy!=0:
-                    print('entrou')
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                    else:
-                        ball.speedy=-ball.speedy
-            
-            brick_2_1_x=brick.rect.x
-            brick_2_1_y=brick.rect.y
-            lista_coordenadas.append(brick_2_1_x)
-            lista_coordenadas.append(brick_2_1_y)
-            print(lista_coordenadas)
-            brick_2_1=Brick2_1(brick2_1_img,lista_coordenadas[0],lista_coordenadas[1])
-            
-            all_bricks_2_1.add(brick_2_1)
-            all_sprites.add(brick_2_1)
-            
-           
-           
+            if check_collision(ball, brick):
+                score += 200
+                brick_2_1 = Brick2_1(brick2_1_img, brick.rect.x, brick.rect.y)
+                all_bricks_2_1.add(brick_2_1)
+                all_sprites.add(brick_2_1)
+        
         
 
-    hits_ball_brick3=pygame.sprite.groupcollide(all_balls, all_bricks_3, False, True, pygame.sprite.collide_mask)
-    if hits_ball_brick3 != []:
-        choice = random.randint(1, 9)
-        brick_center = brick.rect.centerx
-        brick_bottom = brick.rect.bottom
+    hits_ball_brick3 = pygame.sprite.groupcollide(all_balls, all_bricks_3, False, True, pygame.sprite.collide_mask)
     for ball, bricks_hit3 in hits_ball_brick3.items():
         for brick in bricks_hit3:
-            # Define a probabilidade de gerar um poder (0.1 para 10%)
-            score += 100
-            if random.random() < 1:  # Ajuste este valor para tornar mais raro ou comum
-                power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
-                all_powers.add(power)
-                all_sprites.add(power)
+            if check_collision(ball, brick):
+                score += 100
+                if random.random() < 0.1:  # 10% de chance de gerar um poder
+                    power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
+                    all_powers.add(power)
+                    all_sprites.add(power)
 
     # colizao do poder
 
@@ -739,194 +592,12 @@ while state!=DONE:
     for power in hits_power_bar:
         power.power_up(dic_power_numeros)
 
-    # colizao com o bloco inverte a bola
-    for ball, bricks_hit3 in hits_ball_brick3.items():
-        ball_left=ball.rect.left
-        ball_right=ball.rect.right
-        ball_top=ball.rect.top
-        ball_bottom=ball.rect.bottom
-        ball_speedx=ball.speedx
-        ball_speedy=ball.speedy
-        for brick in bricks_hit3:
-            
-            brick_left=brick.rect.left
-            brick_right=brick.rect.right
-            brick_top=brick.rect.top
-            brick_bottom=brick.rect.bottom
 
-            
-         
-
-            #verifia se a colisão foi diferente
-            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
-                # A colisão é mais provavelmente superior ou inferior
-                ball.speedy = -ball.speedy
-            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
-            else:
-                if ball_speedx>0 and ball_speedy<0:
-                    print('entrou')
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        print('caiu')
-                        ball.speedx=-ball.speedx
-                    else:
-                        print('não caiu')
-
-                elif ball_speedx<0 and ball_speedy>0:
-                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                elif ball_speedx<0 and ball_speedy<0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                elif ball_speedx>0 and ball_speedy>0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx = -ball.speedx
-
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-                        ball.speedx=-ball.speedx
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                elif ball_speedx==0 and ball_speedy!=0:
-                    
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                       
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                    
-                        ball.speedx=-ball.speedx
-                    else:
-                        ball.speedx=-ball.speedx
-
-
-    hits_ball_brick_2_1=pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
-    
-    # colizao com o bloco inverte a bola
+    hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
     for ball, bricks_hit in hits_ball_brick_2_1.items():
-        ball_left=ball.rect.left
-        ball_right=ball.rect.right
-        ball_top=ball.rect.top
-        ball_bottom=ball.rect.bottom
-        ball_speedx=ball.speedx
-        ball_speedy=ball.speedy
         for brick in bricks_hit:
-            
-            brick_left=brick.rect.left
-            brick_right=brick.rect.right
-            brick_top=brick.rect.top
-            brick_bottom=brick.rect.bottom
-
-            
-         
-
-            #verifia se a colisão foi diferente
-            if ball_left>=brick_left and ball_right<=brick_right: #Colisão em baixo ou em cima
-                # A colisão é mais provavelmente superior ou inferior
-                ball.speedy = -ball.speedy
-            elif ball_bottom<=brick_bottom and ball_top>=brick_top:
-                # A colisão é mais provavelmente lateral
-                ball.speedx = -ball.speedx
-            else:
-                if ball_speedx>0 and ball_speedy<0:
-                    print('entrou')
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        print('caiu')
-                        ball.speedx=-ball.speedx
-                    else:
-                        print('não caiu')
-
-                elif ball_speedx<0 and ball_speedy>0:
-                    if ball_left>brick_right+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                elif ball_speedx<0 and ball_speedy<0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx=-ball.speedx
-                        ball.speedy = -ball.speedy
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedx=-ball.speedx
-                
-                elif ball_speedx>0 and ball_speedy>0:
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        ball.speedx = -ball.speedx
-
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-                        ball.speedx=-ball.speedx
-
-                    elif ball_left>brick_right-ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        ball.speedy=-ball.speedy
-
-                elif ball_speedx==0 and ball_speedy!=0:
-                    print('entrou')
-                    if ball_right<brick_left+ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy = -ball.speedy
-                        ball.speedx = -ball.speedx
-                    elif ball_left>brick_right-ball.rect.width and ball_top>brick_bottom-ball.rect.height:
-                        print('caiu')
-                        ball.speedy=-ball.speedy
-                
-                    elif ball_right<brick_left+ball.rect.width and ball_bottom<brick_top+ball.rect.height:
-                        print('caiu')
-                        ball.speedx=-ball.speedx
-                    else:
-                        ball.speedx=-ball.speedx
-                        
-                        
+            if check_collision(ball, brick):
+                score += 200
 
 
                 
