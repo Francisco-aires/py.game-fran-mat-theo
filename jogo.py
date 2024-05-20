@@ -63,7 +63,7 @@ coracao_img=pygame.transform.scale(coracao_img, (CORACAO_WIDGHT,CORACAO_HEIGHT))
 #imagens dos poderes
 POWER_WIDTH = 30
 POWER_HEIGHT = 30
-power_img = pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
+power_img = pygame.image.load('Img/47-Breakout-Tiles.png').convert_alpha()
 power_img = pygame.transform.scale(power_img, (POWER_WIDTH, POWER_HEIGHT))
 
 # telinhaaaa de inicio funçao
@@ -191,6 +191,7 @@ def tela_fim(window):
         # Desenha os textos na tela
         window.blit(texto_inicio, inicio_rect)
         window.blit(instrucao, instrucao_rect)
+
 def iniciar_jogo():
     global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3
     global all_balls, all_powers, all_bullets, bar, ball, score, lives, state, FPS
@@ -267,7 +268,7 @@ class PowerUp(pygame.sprite.Sprite):
 def apply_power(power):
     global bar, lives
     if power.effect == 'expand_bar':
-        bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 2, BAR_HEIGHT))
+        bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 1.5, BAR_HEIGHT))
         bar.rect = bar.image.get_rect(center=bar.rect.center)
     elif power.effect == 'extra_life':
         lives += 1
