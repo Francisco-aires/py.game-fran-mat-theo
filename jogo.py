@@ -103,6 +103,7 @@ def tela_Gameover(window):
                 exit()
             if event.type == pygame.KEYDOWN:
                 running = False
+                state = PLAYING
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de Game Over
         font = pygame.font.Font(None, 36)  # Define a fonte
@@ -129,6 +130,7 @@ def tela_fim(window):
                 exit()
             if event.type == pygame.KEYDOWN:
                 running = False
+                state = PLAYING
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
         font = pygame.font.Font(None, 36)  # Define a fonte
@@ -483,6 +485,7 @@ PLAYING = 1
 state = PLAYING
 
 lives=3
+score = 0
 #========loop principal========
 while state!=DONE:
 
@@ -492,7 +495,7 @@ while state!=DONE:
 
         # ----- Verifica consequências
         if event.type == pygame.QUIT:
-            game = False
+            state = DONE
 
     # Captura as teclas pressionadas uma vez por frame
     keys = pygame.key.get_pressed()
@@ -519,6 +522,7 @@ while state!=DONE:
         ball_bottom=ball.rect.bottom
         ball_speedx=ball.speedx
         ball_speedy=ball.speedy
+        score += 100
         for brick in bricks_hit:
             
             brick_left=brick.rect.left
@@ -614,6 +618,7 @@ while state!=DONE:
         ball_bottom = ball.rect.bottom
         ball_speedx = ball.speedx
         ball_speedy = ball.speedy
+        score += 200
         for brick in bricks2_hit:
             
             brick_left = brick.rect.left
@@ -720,6 +725,7 @@ while state!=DONE:
     for ball, bricks_hit3 in hits_ball_brick3.items():
         for brick in bricks_hit3:
             # Define a probabilidade de gerar um poder (0.1 para 10%)
+            score += 100
             if random.random() < 1:  # Ajuste este valor para tornar mais raro ou comum
                 power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
                 all_powers.add(power)
@@ -956,7 +962,7 @@ while state!=DONE:
         lives-=1
     
     if lives==0:
-        state=DONE
+        tela_Gameover(window)
 
     
 
@@ -985,6 +991,11 @@ while state!=DONE:
     text_surface =font.render(chr(9829) * lives, True, (255, 0, 0))
     text_rect = text_surface.get_rect()
     text_rect.bottomleft = (10, HEIGHT - 10)
+    window.blit(text_surface, text_rect)
+    # desenhando a pontuação
+    text_surface = pygame.font.Font('assets/font/PressStart2P.ttf', 28).render("{:08d}".format(score), True, (255, 255, 0))
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (WIDTH / 2,  10)
     window.blit(text_surface, text_rect)
     
     pygame.display.update() # mostra o novo frame para o jogador
