@@ -60,6 +60,11 @@ CORACAO_HEIGHT=30
 coracao_img=pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
 coracao_img=pygame.transform.scale(coracao_img, (CORACAO_WIDGHT,CORACAO_HEIGHT))
 
+#imagens dos poderes
+POWER_WIDTH = 30
+POWER_HEIGHT = 30
+power_img = pygame.image.load('Img/power.png').convert_alpha()
+power_img = pygame.transform.scale(power_img, (POWER_WIDTH, POWER_HEIGHT))
 
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
