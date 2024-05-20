@@ -61,7 +61,7 @@ coracao_img=pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
 coracao_img=pygame.transform.scale(coracao_img, (CORACAO_WIDGHT,CORACAO_HEIGHT))
 
 #imagens dos poderes
-POWER_WIDTH = 30
+POWER_WIDTH = 40
 POWER_HEIGHT = 30
 #aumenta a barra
 power_expand_bar_img = pygame.image.load('Img/47-Breakout-Tiles.png').convert_alpha()
@@ -75,10 +75,9 @@ power_slow_ball_img = pygame.transform.scale(power_slow_ball_img, (POWER_WIDTH, 
 # bola rapida
 power_fast_ball_img = pygame.image.load('Img/42-Breakout-Tiles.png').convert_alpha()
 power_fast_ball_img = pygame.transform.scale(power_fast_ball_img, (POWER_WIDTH, POWER_HEIGHT))
-# atirar
-power_shoot_bullets_img = pygame.image.load('Img/48-Breakout-Tiles.png').convert_alpha()
-power_shoot_bullets_img = pygame.transform.scale(power_shoot_bullets_img, (POWER_WIDTH, POWER_HEIGHT))
-
+#aumenta a barra
+power_d_bar_img = pygame.image.load('Img/46-Breakout-Tiles.png').convert_alpha()
+power_d_bar_img = pygame.transform.scale(power_d_bar_img, (POWER_WIDTH, POWER_HEIGHT))
 
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
@@ -279,23 +278,29 @@ class PowerUp(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT:
             self.kill()
 
+
+
 def apply_power(power):
     global bar, lives, ball
+    power_duration = 300  # Duração do poder em frames (por exemplo, 5 segundos a 60 FPS)
     if power.effect == 'expand_bar':
         bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 1.5, BAR_HEIGHT))
         bar.rect = bar.image.get_rect(center=bar.rect.center)
+        bar.power_timer = power_duration
     elif power.effect == 'extra_life':
         lives += 1
     elif power.effect == 'slow_ball':
-        ball.speedx *= 0.5
+        ball.speedx *= 0.8
         ball.speedy *= 0.5
+        bar.power_timer = power_duration
     elif power.effect == 'fast_ball':
         ball.speedx *= 1.5
         ball.speedy *= 1.5
-    elif power.effect == 'shoot_bullets':
-        bar.shoot_bullets = True
-
-
+        bar.power_timer = power_duration
+    elif power.effect == 'd_bar':
+        bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 0.5, BAR_HEIGHT))
+        bar.rect = bar.image.get_rect(center=bar.rect.center)
+        bar.power_timer = power_duration
 
 
 
@@ -423,8 +428,7 @@ class Ball(pygame.sprite.Sprite):
             self.speedx=0
             self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
             self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
-    
-        
+       
 
 
 class Bar(pygame.sprite.Sprite):
@@ -435,24 +439,36 @@ class Bar(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speedx = 0
-        self.real_x = x  # pra barrinha ir mais devagar
-    
+        self.real_x = x
+        self.power_timer = 0
+        self.original_width = self.rect.width
+        self.last_shot = pygame.time.get_ticks()  # Para controlar a cadência de tiro
+
     def update(self, keys):
-        self.speedx = 0  # Reseta a velocidade cada vez que o update é chamado para evitar movimento contínuo
+        self.speedx = 0
         if keys[pygame.K_LEFT]:
             self.speedx = -7
         if keys[pygame.K_RIGHT]:
             self.speedx = 7
         self.real_x += self.speedx
-        self.rect.x = int(self.real_x) #tranformar em numero inteiro
-
-        # Mantém a barra dentro da tela
+        self.rect.x = int(self.real_x)
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
-            self.real_x = self.rect.x # sintonizar com a posicao real
+            self.real_x = self.rect.x
         if self.rect.left < 0:
             self.rect.left = 0
-            self.real_x = self.rect.x # sintonizar com a posicao real
+            self.real_x = self.rect.x
+
+        # Verificar e atualizar o temporizador dos poderes
+        if self.power_timer > 0:
+            self.power_timer -= 1
+        else:
+            self.reset_powers()
+
+
+    def reset_powers(self):
+        self.image = pygame.transform.scale(bar_img, (self.original_width, BAR_HEIGHT))
+        self.rect = self.image.get_rect(center=self.rect.center)
 
 
 
@@ -536,24 +552,16 @@ class Timer:
 
                     
 class Bullets(pygame.sprite.Sprite):
-    # Construtor da classe.
     def __init__(self, img, bottom, centerx):
-        # Construtor da classe mãe (Sprite).
         pygame.sprite.Sprite.__init__(self)
-
         self.image = img
         self.rect = self.image.get_rect()
-
-        # Coloca no lugar inicial definido em x, y do constutor
         self.rect.centerx = centerx
         self.rect.bottom = bottom
-        self.speedy = -10  # Velocidade fixa para cima
+        self.speedy = -1  # Velocidade fixa para cima
 
     def update(self):
-        # A bala só se move no eixo y
         self.rect.y += self.speedy
-
-        # Se o tiro passar do inicio da tela, morre.
         if self.rect.bottom < 0:
             self.kill()
 
@@ -573,21 +581,6 @@ all_powers = pygame.sprite.Group()
 all_bullets = pygame.sprite.Group()
 
 
-#Criando os Bricks
-
-
-#Barrinha criada
-bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50) 
-all_sprites.add(bar)
-
-condicao_hit_ball_bar=0
-
-#bolinhaaaaaaaaaaaaaa
-ball = Ball(ball_img)
-all_sprites.add(ball)
-all_balls.add(ball)
-
-
 tela_inicio(window)
 
 # Inicia a reprodução da música de fundo em loop
@@ -596,18 +589,17 @@ pygame.mixer.music.play(-1)
 # Variável que ajusta velocidde[
 clock = pygame.time.Clock()
 FPS = 60
-    
-
-
-condicao_jogo=0
 
 DONE = 0
 PLAYING = 1
 GAMEOVER = 2
 
 state = PLAYING
-score=0
+
+condicao_jogo=0
+
 lives=3
+score = 0
 #========loop principal========
 while condicao_jogo<3:
     lista_bricks=[]
@@ -651,15 +643,7 @@ while condicao_jogo<3:
         brick3=Brick3(brick3_img)
         all_bricks_3.add(brick3)
         all_sprites.add(brick3)
-    
-    pygame.mixer.music.play(-1)
 
-    # Variável que ajusta velocidde[
-    clock = pygame.time.Clock()
-    FPS = 60
-            
-
-    
     while state!=DONE and state!=GAMEOVER:
 
         clock.tick(FPS)
@@ -709,7 +693,7 @@ while condicao_jogo<3:
             for brick in bricks_hit3:
                 if check_collision(ball, brick):
                     score += 100
-                    power_type = random.choice(['expand_bar', 'extra_life', 'slow_ball', 'fast_ball', 'shoot_bullets'])
+                    power_type = random.choice(['expand_bar', 'extra_life', 'slow_ball', 'fast_ball','d_bar'])
                     if power_type == 'expand_bar':
                         power = PowerUp(power_expand_bar_img, brick.rect.x, brick.rect.y, 'expand_bar')
                     elif power_type == 'extra_life':
@@ -718,8 +702,8 @@ while condicao_jogo<3:
                         power = PowerUp(power_slow_ball_img, brick.rect.x, brick.rect.y, 'slow_ball')
                     elif power_type == 'fast_ball':
                         power = PowerUp(power_fast_ball_img, brick.rect.x, brick.rect.y, 'fast_ball')
-                    elif power_type == 'shoot_bullets':
-                        power = PowerUp(power_shoot_bullets_img, brick.rect.x, brick.rect.y, 'shoot_bullets')
+                    elif power_type == 'd_bar':
+                        power = PowerUp(power_d_bar_img , brick.rect.x, brick.rect.y, 'd_bar')
                     all_powers.add(power)
                     all_sprites.add(power)
 
@@ -763,20 +747,10 @@ while condicao_jogo<3:
                     ball.speedx= bar.speedx
                 else:
                     ball.speedx = ball.speedx
-        
+
 
         if ball.rect.bottom >= HEIGHT: 
             lives-=1
-        
-        if lives==0:
-            state = GAMEOVER
-        
-            
-            
-
-        
-
-            
 
         # ----- Gera saídas
         window.fill((0,0,0))
@@ -809,15 +783,10 @@ while condicao_jogo<3:
         window.blit(text_surface, text_rect)
         
         pygame.display.update() # mostra o novo frame para o jogador
+
         if lives==0:
             state = GAMEOVER
             if tela_Gameover(window) != "REINICIAR":
                 condicao_jogo=5
 #======Finalização=======
 pygame.quit()
-
-
-
-
-
-
