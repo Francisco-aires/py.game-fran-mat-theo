@@ -573,10 +573,9 @@ while state!=DONE:
         for brick in bricks_hit3:
             if check_collision(ball, brick):
                 score += 100
-                if random.random() < 0.1:  # 10% de chance de gerar um poder
-                    power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
-                    all_powers.add(power)
-                    all_sprites.add(power)
+                power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
+                all_powers.add(power)
+                all_sprites.add(power)
 
     # colizao do poder
 
