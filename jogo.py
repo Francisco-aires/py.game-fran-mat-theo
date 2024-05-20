@@ -58,6 +58,14 @@ BULLETS_WIDGTH = 10
 BULLETS_HEIGHT = 20
 bullets_img = pygame.image.load("Img/61-Breakout-Tiles.png")
 bullets_img = pygame.transform.scale(bullets_img, (BULLETS_WIDGTH, BULLETS_HEIGHT))
+
+
+CORACAO_WIDGHT=30
+CORACAO_HEIGHT=30
+coracao_img=pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
+coracao_img=pygame.transform.scale(coracao_img, (CORACAO_WIDGHT,CORACAO_HEIGHT))
+
+
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
     running = True
@@ -283,8 +291,11 @@ class Ball(pygame.sprite.Sprite):
         if self.rect.bottom > HEIGHT: # teleportando pro inicio
             self.rect.x = 500
             self.rect.y = 250
+            self.speedy=5
+            self.speedx=0
             self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
             self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
+    
         
 
 
@@ -475,6 +486,8 @@ pygame.mixer.music.play(-1)
 clock = pygame.time.Clock()
 FPS = 60
 
+
+lives=3
 #========loop principal========
 while game:
 
@@ -612,6 +625,7 @@ while game:
             brick_right = brick.rect.right
             brick_top = brick.rect.top
             brick_bottom = brick.rect.bottom
+            lista_coordenadas=[]
 
             
          
@@ -691,7 +705,11 @@ while game:
             
             brick_2_1_x=brick.rect.x
             brick_2_1_y=brick.rect.y
-            brick_2_1=Brick2_1(brick2_1_img,brick_2_1_x,brick_2_1_y)
+            lista_coordenadas.append(brick_2_1_x)
+            lista_coordenadas.append(brick_2_1_y)
+            print(lista_coordenadas)
+            brick_2_1=Brick2_1(brick2_1_img,lista_coordenadas[0],lista_coordenadas[1])
+            
             all_bricks_2_1.add(brick_2_1)
             all_sprites.add(brick_2_1)
             
@@ -936,6 +954,12 @@ while game:
                 ball.speedx= bar.speedx
             else:
                 ball.speedx = ball.speedx
+    
+
+    if ball.rect.bottom > HEIGHT: # teleportando pro inicio
+        lives-=1
+
+    
 
         
 
@@ -955,6 +979,14 @@ while game:
     all_bricks_3.draw(window)
 
     all_powers.draw(window)
+
+
+    # Desenhando as vidas
+    font = pygame.font.Font('assets/font/PressStart2P.ttf', 28)
+    text_surface =font.render(chr(9829) * lives, True, (255, 0, 0))
+    text_rect = text_surface.get_rect()
+    text_rect.bottomleft = (10, HEIGHT - 10)
+    window.blit(text_surface, text_rect)
     
     pygame.display.update() # mostra o novo frame para o jogador
 #======Finalização=======
