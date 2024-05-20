@@ -160,15 +160,6 @@ lista_x=[30,90,150,210,270,510,570,630,690,750]
 lista_y=[30,60,90,120,180,210,240]
 lista_bricks=[]#lista com a posição de todos os blocos
 
-#lista posições bricks inquebráveis (2)
-
-lista_x2=[30,90,150,210,270,510,570,630,690,750]
-lista_y2=[30,60,90,120,180,210,240]
-
-#definindo os novos tiposz
-
-lista_x3=[30,90,150,210,270,510,570,630,690,750]
-lista_y3=[30,60,90,120,180,210,240]
 
 
 class Brick(pygame.sprite.Sprite):
@@ -206,8 +197,8 @@ class Brick2(pygame.sprite.Sprite):
         condicao=True
         while condicao:
             lista_par2=[] #lista com as coordenadas do brick para verificar se essa esta livre
-            x= random.choice(lista_x2)
-            y=random.choice(lista_y2)
+            x= random.choice(lista_x)
+            y=random.choice(lista_y)
             lista_par2.append(x)
             lista_par2.append(y)
             if lista_par2 in lista_bricks:   #Modificar caso já esteja lotado
@@ -243,8 +234,8 @@ class Brick3(pygame.sprite.Sprite):
         condicao=True
         while condicao:
             lista_par3=[] #lista com as coordenadas do brick para verificar se essa esta livre
-            x= random.choice(lista_x3)
-            y=random.choice(lista_y3)
+            x= random.choice(lista_x)
+            y=random.choice(lista_y)
             lista_par3.append(x)
             lista_par3.append(y)
             if lista_par3 in lista_bricks:   #Modificar caso já esteja lotado
@@ -486,10 +477,14 @@ pygame.mixer.music.play(-1)
 clock = pygame.time.Clock()
 FPS = 60
 
+DONE = 0
+PLAYING = 1
+
+state = PLAYING
 
 lives=3
 #========loop principal========
-while game:
+while state!=DONE:
 
     clock.tick(FPS)
     # ----- Trata eventos
@@ -959,6 +954,9 @@ while game:
 
     if ball.rect.bottom >= HEIGHT: 
         lives-=1
+    
+    if lives==0:
+        state=DONE
 
     
 
