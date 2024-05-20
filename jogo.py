@@ -60,6 +60,25 @@ CORACAO_HEIGHT=30
 coracao_img=pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
 coracao_img=pygame.transform.scale(coracao_img, (CORACAO_WIDGHT,CORACAO_HEIGHT))
 
+#imagens dos poderes
+POWER_WIDTH = 30
+POWER_HEIGHT = 30
+#aumenta a barra
+power_expand_bar_img = pygame.image.load('Img/47-Breakout-Tiles.png').convert_alpha()
+power_expand_bar_img = pygame.transform.scale(power_expand_bar_img, (POWER_WIDTH, POWER_HEIGHT))
+# extra vida
+power_extra_life_img = pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
+power_extra_life_img = pygame.transform.scale(power_extra_life_img, (POWER_WIDTH, POWER_HEIGHT))
+# bola lenta
+power_slow_ball_img = pygame.image.load('Img/41-Breakout-Tiles.png').convert_alpha()
+power_slow_ball_img = pygame.transform.scale(power_slow_ball_img, (POWER_WIDTH, POWER_HEIGHT))
+# bola rapida
+power_fast_ball_img = pygame.image.load('Img/42-Breakout-Tiles.png').convert_alpha()
+power_fast_ball_img = pygame.transform.scale(power_fast_ball_img, (POWER_WIDTH, POWER_HEIGHT))
+# atirar
+power_shoot_bullets_img = pygame.image.load('Img/48-Breakout-Tiles.png').convert_alpha()
+power_shoot_bullets_img = pygame.transform.scale(power_shoot_bullets_img, (POWER_WIDTH, POWER_HEIGHT))
+
 
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
@@ -186,6 +205,7 @@ def tela_fim(window):
         # Desenha os textos na tela
         window.blit(texto_inicio, inicio_rect)
         window.blit(instrucao, instrucao_rect)
+
 def iniciar_jogo():
     global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3
     global all_balls, all_powers, all_bullets, bar, ball, score, lives, state, FPS
@@ -239,6 +259,43 @@ pygame.mixer.music.load('sons/name.mp3')
 lista_x=[30,90,150,210,270,510,570,630,690,750]
 lista_y=[30,60,90,120,180,210,240]
 lista_bricks=[]#lista com a posição de todos os blocos
+
+######################### poderessssss  ########################
+
+
+
+class PowerUp(pygame.sprite.Sprite):
+    def __init__(self, img, x, y, effect):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speedy = 3  # Velocidade de queda do poder
+        self.effect = effect  # Tipo de efeito do poder
+
+    def update(self):
+        self.rect.y += self.speedy
+        if self.rect.top > HEIGHT:
+            self.kill()
+
+def apply_power(power):
+    global bar, lives, ball
+    if power.effect == 'expand_bar':
+        bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 1.5, BAR_HEIGHT))
+        bar.rect = bar.image.get_rect(center=bar.rect.center)
+    elif power.effect == 'extra_life':
+        lives += 1
+    elif power.effect == 'slow_ball':
+        ball.speedx *= 0.5
+        ball.speedy *= 0.5
+    elif power.effect == 'fast_ball':
+        ball.speedx *= 1.5
+        ball.speedy *= 1.5
+    elif power.effect == 'shoot_bullets':
+        bar.shoot_bullets = True
+
+
 
 
 
@@ -611,8 +668,19 @@ while state!=DONE:
         for brick in bricks_hit3:
             if check_collision(ball, brick):
                 score += 100
-
-    # colizao do poder
+                power_type = random.choice(['expand_bar', 'extra_life', 'slow_ball', 'fast_ball', 'shoot_bullets'])
+                if power_type == 'expand_bar':
+                    power = PowerUp(power_expand_bar_img, brick.rect.x, brick.rect.y, 'expand_bar')
+                elif power_type == 'extra_life':
+                    power = PowerUp(power_extra_life_img, brick.rect.x, brick.rect.y, 'extra_life')
+                elif power_type == 'slow_ball':
+                    power = PowerUp(power_slow_ball_img, brick.rect.x, brick.rect.y, 'slow_ball')
+                elif power_type == 'fast_ball':
+                    power = PowerUp(power_fast_ball_img, brick.rect.x, brick.rect.y, 'fast_ball')
+                elif power_type == 'shoot_bullets':
+                    power = PowerUp(power_shoot_bullets_img, brick.rect.x, brick.rect.y, 'shoot_bullets')
+                all_powers.add(power)
+                all_sprites.add(power)
 
 
     hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
@@ -621,7 +689,10 @@ while state!=DONE:
             if check_collision(ball, brick):
                 score += 200
 
-
+    # colizao do poder
+    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
+    for power in hits_power_bar:
+        apply_power(power)
                 
     
 
