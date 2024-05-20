@@ -246,11 +246,12 @@ def iniciar_jogo():
 
 ############### carregar sons #####################
 # Carrega o som de colisão
-som_colisao = pygame.mixer.Sound('sons/somco.mp3')
+som_colisao = pygame.mixer.Sound('sons/efeito sono - 1716236286028 (online-audio-converter.com)')
 #        som_colisao.play() se quiser tocar
 
 # Carrega a música de fundo
-pygame.mixer.music.load('sons/name.mp3')
+musica_1 = pygame.mixer.music.load('sons/name.mp3')
+musica_3 = pygame.mixer.music.load('sons/nome')
 
 
 #---------- Inicia estrutura de dados
@@ -258,7 +259,10 @@ pygame.mixer.music.load('sons/name.mp3')
 lista_x=[30,90,150,210,270,510,570,630,690,750]
 lista_y=[30,60,90,120,180,210,240]
 lista_bricks=[]#lista com a posição de todos os blocos
-
+######################## Backgrounds #####################
+background_1 = pygame.image.load('img/pngtree-landscape-with-mountains-forest-and-clouds-2d-game-background-image_13246432').convert()
+background_2 = pygame.image.load('img/background-2').convert()
+background_3 = pygame.image.load('img/background-3').convert()
 ######################### poderessssss  ########################
 
 
