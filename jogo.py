@@ -250,8 +250,8 @@ som_colisao = pygame.mixer.Sound('sons/efeito sono - 1716236286028 (online-audio
 #        som_colisao.play() se quiser tocar
 
 # Carrega a música de fundo
-musica_1 = pygame.mixer.music.load('sons/name.mp3')
-musica_3 = pygame.mixer.music.load('sons/nome')
+pygame.mixer.music.load('sons/name.mp3')
+pygame.mixer.music.load('sons/Star Wars - Battle of the Heroes.mp3')
 
 
 #---------- Inicia estrutura de dados
