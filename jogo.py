@@ -48,12 +48,7 @@ ball_img=pygame.image.load('Img/58-Breakout-Tiles.png').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
 POWER_WIDGTH = 30
 POWER_HEIGHT = 30
-dic_power_image = {}
-dic_power_numeros = {}
-for i in range(41, 49):
-    dic_power_image["Poder {0}".format(i)] = pygame.image.load('Img/{0}-Breakout-Tiles.png'.format(i)).convert_alpha()
-    dic_power_image["Poder {0}".format(i)] = pygame.transform.scale(dic_power_image["Poder {0}".format(i)], (POWER_WIDGTH, POWER_HEIGHT))
-    dic_power_numeros["Poder {0}".format(i)] = i
+
 BULLETS_WIDGTH = 10
 BULLETS_HEIGHT = 20
 bullets_img = pygame.image.load("Img/61-Breakout-Tiles.png")
@@ -616,16 +611,8 @@ while state!=DONE:
         for brick in bricks_hit3:
             if check_collision(ball, brick):
                 score += 100
-                power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
-                all_powers.add(power)
-                all_sprites.add(power)
 
     # colizao do poder
-
-    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
-    for power in hits_power_bar:
-        power_type = Powers.power_up(dic_power_numeros)
-        Timer.activate_power(power_type)
 
 
     hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
