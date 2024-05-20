@@ -279,6 +279,9 @@ class PowerUp(pygame.sprite.Sprite):
         if self.rect.top > HEIGHT:
             self.kill()
 
+
+
+
 def apply_power(power):
     global bar, lives, ball
     if power.effect == 'expand_bar':
@@ -401,6 +404,7 @@ class Ball(pygame.sprite.Sprite):
         self.speedx = 0 # velocidade inicial
         self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
         self.condicao_hit_ball_bar=0
+        self.shoot_bullets = False
 
     def update (self):
         # Atualiza as posições reais com as velocidades
@@ -424,7 +428,10 @@ class Ball(pygame.sprite.Sprite):
             self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
             self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
     
-        
+        if self.shoot_bullets and keys[pygame.K_SPACE]:
+            bullet = Bullets(bullets_img, self.rect.top, self.rect.centerx)
+            all_bullets.add(bullet)
+            all_sprites.add(bullet)       
 
 
 class Bar(pygame.sprite.Sprite):
