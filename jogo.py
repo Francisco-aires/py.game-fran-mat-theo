@@ -931,6 +931,7 @@ while game:
 
     # colizao da barrinha X bolinha
     hits_ball_bar=pygame.sprite.spritecollide(bar,all_balls,False,pygame.sprite.collide_mask)
+
     if len(hits_ball_bar)>ball.condicao_hit_ball_bar:
         ball.speedy = -abs(ball.speedy)
         if ball.speedx>0:
@@ -956,7 +957,7 @@ while game:
                 ball.speedx = ball.speedx
     
 
-    if ball.rect.bottom > HEIGHT: # teleportando pro inicio
+    if ball.rect.bottom >= HEIGHT: 
         lives-=1
 
     
