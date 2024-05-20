@@ -281,23 +281,26 @@ class PowerUp(pygame.sprite.Sprite):
 
 
 
-
 def apply_power(power):
     global bar, lives, ball
+    power_duration = 300  # Duração do poder em frames (por exemplo, 5 segundos a 60 FPS)
     if power.effect == 'expand_bar':
         bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 1.5, BAR_HEIGHT))
         bar.rect = bar.image.get_rect(center=bar.rect.center)
+        bar.power_timer = power_duration
     elif power.effect == 'extra_life':
         lives += 1
     elif power.effect == 'slow_ball':
-        ball.speedx *= 0.5
+        ball.speedx *= 0.8
         ball.speedy *= 0.5
+        bar.power_timer = power_duration
     elif power.effect == 'fast_ball':
         ball.speedx *= 1.5
         ball.speedy *= 1.5
+        bar.power_timer = power_duration
     elif power.effect == 'shoot_bullets':
         bar.shoot_bullets = True
-
+        bar.power_timer = power_duration
 
 
 
@@ -443,7 +446,10 @@ class Bar(pygame.sprite.Sprite):
         self.rect.y = y
         self.speedx = 0
         self.real_x = x  # pra barrinha ir mais devagar
-    
+        self.power_timer = 0
+        self.original_width = self.rect.width
+
+
     def update(self, keys):
         self.speedx = 0  # Reseta a velocidade cada vez que o update é chamado para evitar movimento contínuo
         if keys[pygame.K_LEFT]:
@@ -461,6 +467,16 @@ class Bar(pygame.sprite.Sprite):
             self.rect.left = 0
             self.real_x = self.rect.x # sintonizar com a posicao real
 
+        # Verificar e atualizar o temporizador dos poderes
+        if self.power_timer > 0:
+            self.power_timer -= 1
+        else:
+            self.reset_powers()
+
+    def reset_powers(self):
+        self.image = pygame.transform.scale(bar_img, (self.original_width, BAR_HEIGHT))
+        self.rect = self.image.get_rect(center=self.rect.center)
+        self.shoot_bullets = False
 
 
     
