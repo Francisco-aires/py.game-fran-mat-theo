@@ -146,8 +146,7 @@ def tela_Gameover(window):
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                running = False
-                state = PLAYING
+                return "REINICIAR"
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de Game Over
         font = pygame.font.Font(None, 36)  # Define a fonte
@@ -192,6 +191,44 @@ def tela_fim(window):
         # Desenha os textos na tela
         window.blit(texto_inicio, inicio_rect)
         window.blit(instrucao, instrucao_rect)
+def iniciar_jogo():
+    global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3
+    global all_balls, all_powers, all_bullets, bar, ball, score, lives, state, FPS
+
+    all_sprites = pygame.sprite.Group()
+    all_bricks = pygame.sprite.Group()  # brick básico
+    all_bricks_2 = pygame.sprite.Group()  # brick 2
+    all_bricks_2_1 = pygame.sprite.Group()  # brick 2 meio quebrado quebrado
+    all_bricks_3 = pygame.sprite.Group()  # brick 3(poder)
+    all_balls = pygame.sprite.Group()
+    all_powers = pygame.sprite.Group()
+    all_bullets = pygame.sprite.Group()
+
+    for i in range(30):
+        brick = Brick(brick_img)
+        all_bricks.add(brick)
+        all_sprites.add(brick)
+    for j in range(10):
+        brick2 = Brick2(brick2_img)
+        all_bricks_2.add(brick2)
+        all_sprites.add(brick2)
+    for m in range(10):
+        brick3 = Brick3(brick3_img)
+        all_bricks_3.add(brick3)
+        all_sprites.add(brick3)
+
+    bar = Bar(bar_img, WIDTH // 2, HEIGHT - 50)
+    all_sprites.add(bar)
+
+    ball = Ball(ball_img)
+    all_sprites.add(ball)
+    all_balls.add(ball)
+
+    score = 0
+    lives = 3
+    FPS = 60
+    state = "PLAYING"
+
 
 ############### carregar sons #####################
 # Carrega o som de colisão
@@ -385,8 +422,8 @@ class Powers(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.kill()
 
-    def power_up(self, dic_power_numbers):
-        return dic_power_numbers[self.power_type]
+    def power_up(self, dic_power_numeros):
+        return dic_power_numeros[self.power_type]
    
 class Timer:
     def __init__(self):
@@ -635,7 +672,10 @@ while state!=DONE:
     if lives==0:
         state = GAMEOVER
     if state == GAMEOVER:
-        tela_Gameover(window)
+        if tela_Gameover(window) == "REINICIAR":
+           iniciar_jogo()
+           state = PLAYING
+
         
 
     
@@ -667,7 +707,7 @@ while state!=DONE:
     text_rect.bottomleft = (10, HEIGHT - 10)
     window.blit(text_surface, text_rect)
     # desenhando a pontuação
-    text_surface = pygame.font.Font('assets/font/PressStart2P.ttf', 28).render("{:08d}".format(score), True, (255, 255, 0))
+    text_surface = pygame.font.Font('assets/font/PressStart2P.ttf', 24).render("{:08d}".format(score), True, (255, 255, 0))
     text_rect = text_surface.get_rect()
     text_rect.midtop = (WIDTH / 2,  10)
     window.blit(text_surface, text_rect)
