@@ -48,12 +48,7 @@ ball_img=pygame.image.load('Img/58-Breakout-Tiles.png').convert_alpha()
 ball_img=pygame.transform.scale(ball_img, (BALL_WIDHTH, BALL_HEIGHT))
 POWER_WIDGTH = 30
 POWER_HEIGHT = 30
-dic_power_image = {}
-dic_power_numeros = {}
-for i in range(41, 49):
-    dic_power_image["Poder {0}".format(i)] = pygame.image.load('Img/{0}-Breakout-Tiles.png'.format(i)).convert_alpha()
-    dic_power_image["Poder {0}".format(i)] = pygame.transform.scale(dic_power_image["Poder {0}".format(i)], (POWER_WIDGTH, POWER_HEIGHT))
-    dic_power_numeros["Poder {0}".format(i)] = i
+
 BULLETS_WIDGTH = 10
 BULLETS_HEIGHT = 20
 bullets_img = pygame.image.load("Img/61-Breakout-Tiles.png")
@@ -366,77 +361,7 @@ class Bar(pygame.sprite.Sprite):
             self.real_x = self.rect.x # sintonizar com a posicao real
 
 
-class Powers(pygame.sprite.Sprite):
-    def __init__(self, dic_power_img, center, bottom):
-        pygame.sprite.Sprite.__init__(self)
-        self.power_type = random.choice(list(dic_power_img.keys()))
-        self.image = dic_power_img[self.power_type]
-        self.rect = self.image.get_rect()
-        self.rect.centerx = center
-        self.rect.bottom = bottom
-        self.speedy = 2
-        self.power_timers = {}
 
-    def update(self):
-        self.rect.y += self.speedy
-        if self.rect.bottom < 0:
-            self.kill()
-
-    def power_up(self, dic_power_numbers):
-        return dic_power_numbers[self.power_type]
-
-    def update_powers(self):
-        current_time = pygame.time.get_ticks()
-        for power, end_time in list(self.power_timers.items()):
-            if current_time > end_time:
-                self.deactivate_power(power)
-                del self.power_timers[power]
-
-    def deactivate_power(self, power, game):
-        if power == 41 or power == 42:
-            game.FPS = 60
-        elif power == 43:
-            while len(game.all_balls) > 1:
-                ball = game.all_balls.sprites()[0]
-                ball.kill()
-        elif power == 44 or power == 45:
-            pygame.sprite.groupcollide(game.all_balls, game.all_bricks_2, False, False, pygame.sprite.collide_mask)
-        elif power == 46 or power == 47:
-            game.bar.image = pygame.transform.scale(game.bar.image, (200, game.bar.rect.height))
-        elif power == 48:
-            for bullet in game.all_bullets:
-                bullet.kill()
-
-    def activate_power(self, power, game):
-        current_time = pygame.time.get_ticks()
-        duration = 5000  # Duração de 5 segundos para todos os poderes
-        end_time = current_time + duration
-        self.power_timers[power] = end_time
-
-        if power == 41:
-            game.FPS = 45  # Poder que deixa o jogo mais lento
-        elif power == 42:
-            game.FPS = 75  # Poder que deixa o jogo mais rápido
-        elif power == 43:
-            for i in range(2):
-                ball = Ball(game.ball_img)  # Poder que adiciona mais duas bolas ao jogo
-                game.all_sprites.add(ball)
-                game.all_balls.add(ball)
-        elif power == 44:
-            pygame.sprite.groupcollide(game.all_balls, game.all_bricks_2, False, True, pygame.sprite.collide_mask)  # Poder que deixa a bola forte
-        elif power == 45:
-            pygame.sprite.groupcollide(game.all_balls, game.all_bricks, False, False, pygame.sprite.collide_mask)  # Poder que deixa a bola fraca
-        elif power == 46:
-            game.bar.image = pygame.transform.scale(game.bar.image, (175, game.bar.rect.height))  # Poder que diminui a barra
-        elif power == 47:
-            game.bar.image = pygame.transform.scale(game.bar.image, (225, game.bar.rect.height))  # Poder que expande a barra
-        elif power == 48:
-            for brick in game.all_bricks:
-                brick_center = brick.rect.centerx
-                brick_bottom = brick.rect.bottom
-                bullet = Bullets(game.bullets_img, brick_center, brick_bottom)
-                game.all_sprites.add(bullet)
-                game.all_bullets.add(bullet)
 
                     
 class Bullets(pygame.sprite.Sprite):
@@ -572,21 +497,10 @@ while state!=DONE:
         for brick in bricks_hit3:
             if check_collision(ball, brick):
                 score += 100
-                power = Powers(dic_power_image, brick.rect.centerx, brick.rect.bottom)
-                all_powers.add(power)
-                all_sprites.add(power)
 
     # colizao do poder
 
-    hits_power_bar = pygame.sprite.spritecollide(bar, all_powers, True, pygame.sprite.collide_mask)
-    for power in hits_power_bar:
-        power_type = power.power_up(dic_power_numeros)  # Chamada correta do método de instância
-        power.activate_power(power_type, game)
 
-    # Atualiza poderes
-    for power in all_powers:
-        power.update_powers()
-        
     hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
     for ball, bricks_hit in hits_ball_brick_2_1.items():
         for brick in bricks_hit:
