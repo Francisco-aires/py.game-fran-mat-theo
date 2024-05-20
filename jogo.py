@@ -61,7 +61,7 @@ coracao_img=pygame.image.load('Img/60-Breakout-Tiles.png').convert_alpha()
 coracao_img=pygame.transform.scale(coracao_img, (CORACAO_WIDGHT,CORACAO_HEIGHT))
 
 #imagens dos poderes
-POWER_WIDTH = 30
+POWER_WIDTH = 40
 POWER_HEIGHT = 30
 #aumenta a barra
 power_expand_bar_img = pygame.image.load('Img/47-Breakout-Tiles.png').convert_alpha()
@@ -75,8 +75,9 @@ power_slow_ball_img = pygame.transform.scale(power_slow_ball_img, (POWER_WIDTH, 
 # bola rapida
 power_fast_ball_img = pygame.image.load('Img/42-Breakout-Tiles.png').convert_alpha()
 power_fast_ball_img = pygame.transform.scale(power_fast_ball_img, (POWER_WIDTH, POWER_HEIGHT))
-
-
+#aumenta a barra
+power_d_bar_img = pygame.image.load('Img/46-Breakout-Tiles.png').convert_alpha()
+power_d_bar_img = pygame.transform.scale(power_d_bar_img, (POWER_WIDTH, POWER_HEIGHT))
 
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
@@ -296,7 +297,10 @@ def apply_power(power):
         ball.speedx *= 1.5
         ball.speedy *= 1.5
         bar.power_timer = power_duration
-
+    elif power.effect == 'd_bar':
+        bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 0.5, BAR_HEIGHT))
+        bar.rect = bar.image.get_rect(center=bar.rect.center)
+        bar.power_timer = power_duration
 
 
 
@@ -672,7 +676,7 @@ while state!=DONE:
         for brick in bricks_hit3:
             if check_collision(ball, brick):
                 score += 100
-                power_type = random.choice(['expand_bar', 'extra_life', 'slow_ball', 'fast_ball', 'shoot_bullets'])
+                power_type = random.choice(['expand_bar', 'extra_life', 'slow_ball', 'fast_ball','d_bar'])
                 if power_type == 'expand_bar':
                     power = PowerUp(power_expand_bar_img, brick.rect.x, brick.rect.y, 'expand_bar')
                 elif power_type == 'extra_life':
@@ -681,6 +685,8 @@ while state!=DONE:
                     power = PowerUp(power_slow_ball_img, brick.rect.x, brick.rect.y, 'slow_ball')
                 elif power_type == 'fast_ball':
                     power = PowerUp(power_fast_ball_img, brick.rect.x, brick.rect.y, 'fast_ball')
+                elif power_type == 'd_bar':
+                    power = PowerUp(power_d_bar_img , brick.rect.x, brick.rect.y, 'd_bar')
                 all_powers.add(power)
                 all_sprites.add(power)
 
