@@ -680,7 +680,7 @@ score = 0
 while condicao_jogo<3:
     if condicao_jogo == 0:
         # Carrega a música de fundo
-        pygame.mixer.music.load('sons/joke.mp3')
+        pygame.mixer.music.load('sons/musica_ofc.mp3')
         # Inicia a reprodução da música de fundo em loop
         pygame.mixer.music.play(-1)
     if condicao_jogo == 2:
