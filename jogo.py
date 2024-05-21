@@ -379,8 +379,8 @@ class Timer:
             ball.speedx *= 0.8
             ball.speedy *= 0.8
         elif power == 'fast_ball':
-            ball.speedx *= 1.5
-            ball.speedy *= 1.5
+            ball.speedx *= 1.2
+            ball.speedy *= 1.2
         elif power == 'd_bar':
             bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 0.5, BAR_HEIGHT))
             bar.rect = bar.image.get_rect(center=bar.rect.center)
@@ -393,8 +393,8 @@ class Timer:
             ball.speedx/=0.8
             ball.speedy /=0.8
         elif power == 'fast_ball':
-            ball.speedx/=1.5
-            ball.speedy/=1.5
+            ball.speedx/=1.2
+            ball.speedy/=1.2
 
 
 class Brick(pygame.sprite.Sprite):
