@@ -349,17 +349,12 @@ def apply_power(power):
         bar.rect = bar.image.get_rect(center=bar.rect.center)
         bar.power_timer = power_duration
 
-ball_speed_x0=0
-ball_speed_y0=0
 
 
 
 class Timer:
-    def __init__(self,ball):
+    def __init__(self):
         self.power_timers = {}
-
-    ball_speed_x0=ball.speedx
-    ball_speed_y0=ball.speedy
 
     def update_powers(self):
         current_time = pygame.time.get_ticks()
@@ -381,8 +376,8 @@ class Timer:
             global lives
             lives += 1
         elif power == 'slow_ball':
-            ball.speedx *= 2
-            ball.speedy *= 1.5
+            ball.speedx *= 0.8
+            ball.speedy *= 0.8
         elif power == 'fast_ball':
             ball.speedx *= 1.5
             ball.speedy *= 1.5
@@ -395,11 +390,11 @@ class Timer:
             bar.image = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
             bar.rect = bar.image.get_rect(center=bar.rect.center)
         elif power == 'slow_ball':
-            ball.speedx=ball_speed_x0
-            ball.speedy =ball_speed_y0
+            ball.speedx/=0.8
+            ball.speedy /=0.8
         elif power == 'fast_ball':
-            ball.speedx=ball_speed_x0
-            ball.speedy =ball_speed_y0
+            ball.speedx/=1.5
+            ball.speedy/=1.5
 
 
 class Brick(pygame.sprite.Sprite):
