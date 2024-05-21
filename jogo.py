@@ -414,17 +414,22 @@ class Brick3(pygame.sprite.Sprite):
 
 
 class Ball(pygame.sprite.Sprite):
-    def __init__(self, img):
+    def __init__(self, img,bar_x,condicao_jogo):
         pygame.sprite.Sprite.__init__(self)
         self.image = img  # Define a imagem da bola
         self.rect = self.image.get_rect()
-        self.rect.x = 425
-        self.rect.y = 250
+        self.rect.x = bar_x
+        self.rect.y = 450
         self.mask = pygame.mask.from_surface(self.image)
         self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
         self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
-        self.speedx = 0 # velocidade inicial
-        self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
+        if condicao_jogo<=1:
+            self.speedx = 0 # velocidade inicial
+            self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
+        elif condicao_jogo==2:
+            self.speedx = 0 # velocidade inicial
+            self.speedy = 7  # Velocidade negativa para mover a bola para cima inicialmente
+
         self.condicao_hit_ball_bar=0
 
     def update (self):
@@ -442,10 +447,14 @@ class Ball(pygame.sprite.Sprite):
             self.speedy = -self.speedy
         # nao sei o que fazer no chao
         if self.rect.bottom > HEIGHT: # teleportando pro inicio
-            self.rect.x = 500
-            self.rect.y = 250
-            self.speedy=5
-            self.speedx=0
+            self.rect.x =bar.rect.centerx
+            self.rect.y = 450
+            if condicao_jogo<=1:
+                self.speedx = 0 # velocidade inicial
+                self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
+            elif condicao_jogo==2:
+                self.speedx = 0 # velocidade inicial
+                self.speedy = 7  # Velocidade negativa para mover a bola para cima inicialmente
             self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
             self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
        
@@ -618,7 +627,7 @@ NEXTLEVEL=3
 
 state = PLAYING
 
-condicao_jogo=0
+condicao_jogo=2
 
 lives=3
 score = 0
@@ -658,7 +667,7 @@ while condicao_jogo<3:
     condicao_hit_ball_bar=0
 
     #bolinhaaaaaaaaaaaaaa
-    ball = Ball(ball_img)
+    ball = Ball(ball_img,bar.rect.centerx,condicao_jogo)
     all_sprites.add(ball)
     all_balls.add(ball)
    
@@ -792,9 +801,13 @@ while condicao_jogo<3:
                 else:
                     ball.speedx = ball.speedx
 
-
-        if ball.rect.bottom >= HEIGHT: 
-            lives-=1
+        if ball.speedy>5 and FPS>=60:
+            if ball.rect.bottom>= HEIGHT-5: 
+                lives-=1
+        elif ball.speedy<=5 or FPS==45:
+            if ball.rect.bottom>=HEIGHT-2: 
+                lives-=1
+            
 
         # ----- Gera saídas
         window.fill((0,0,0))
