@@ -84,12 +84,12 @@ tela_inicial=pygame.image.load('Img/Breakout Insper.png').convert_alpha()
 tela_inicial= pygame.transform.scale(tela_inicial, (WIDTH, HEIGHT))
 
 #Tela game over
-tela_gameover=pygame.image.load('Img/GAme Over.png').convert_alpha()
+tela_gameover=pygame.image.load('Img/GAme Over (4).png').convert_alpha()
 tela_gameover= pygame.transform.scale(tela_gameover, (WIDTH, HEIGHT))
 
 #Tela fim (vitória)
-tela_fim=pygame.image.load('Img/GAme Ove.png').convert_alpha()
-tela_fim= pygame.transform.scale(tela_fim, (WIDTH, HEIGHT))
+tela_Fim=pygame.image.load('Img/GAme Ove.png').convert_alpha()
+tela_Fim= pygame.transform.scale(tela_Fim, (WIDTH, HEIGHT))
 
 
 
@@ -163,20 +163,8 @@ def tela_Gameover(window):
             if event.type == pygame.KEYDOWN:
                 return "REINICIAR"
 
-        window.fill((0, 0, 0))  # Define a cor de fundo da tela de Game Over
-        font = pygame.font.Font(None, 36)  # Define a fonte
-
-        # Cria um texto de Game Over
-        texto_gameover = font.render('GAME OVER', True, ((255, 0, 0)))
-        fim_rect = texto_gameover.get_rect(center=(WIDTH / 2, HEIGHT / 3))
-
-        # Cria um texto de instrução
-        instrucao = font.render('Pressione qualquer tecla para recomeçar', True, ((255, 255, 255)))
-        instrucao_rect = instrucao.get_rect(center=(WIDTH / 2, HEIGHT / 2))
-
-        # Desenha os textos na tela
-        window.blit(texto_gameover, fim_rect)
-        window.blit(instrucao, instrucao_rect)
+       
+        window.blit(tela_gameover,(0,0))
 
         pygame.display.update()
 
@@ -191,20 +179,10 @@ def tela_fim(window):
             if event.type == pygame.KEYDOWN:
                 return 'REINICIAR'
 
-        window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
-        font = pygame.font.Font(None, 36)  # Define a fonte
+        window.blit(tela_Fim,(0,0))
 
-        # Cria um texto de boas-vindas
-        texto_inicio = font.render('Você ganhou!', True, ((255, 255, 255)))
-        inicio_rect = texto_inicio.get_rect(center=(WIDTH / 2, HEIGHT / 3))
+        pygame.display.update()
 
-        # Cria um texto de instrução
-        instrucao = font.render('Pressione qualquer tecla para recomeçar', True, ((255, 255, 255)))
-        instrucao_rect = instrucao.get_rect(center=(WIDTH / 2, HEIGHT / 2))
-
-        # Desenha os textos na tela
-        window.blit(texto_inicio, inicio_rect)
-        window.blit(instrucao, instrucao_rect)
 
 def iniciar_jogo():
     global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3, all_bricksT
@@ -674,7 +652,7 @@ NEXTLEVEL=3
 
 state = PLAYING
 
-condicao_jogo=0
+condicao_jogo=2
 
 lives=3
 score = 0
@@ -920,8 +898,8 @@ while condicao_jogo<3:
         if len(all_bricksT)==0:
             state=NEXTLEVEL
             condicao_jogo+=1
-            if condicao_jogo==3:
-                state=GAMEOVER
+        if condicao_jogo==3:
+            state=GAMEOVER
 
         if lives==0:
             state = GAMEOVER
@@ -935,8 +913,7 @@ while condicao_jogo<3:
         
         if tela_fim(window)=='REINCIAR':
             condicao_jogo=0
-        else:
-            pygame.quit()
+       
         
             
 
