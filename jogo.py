@@ -670,6 +670,7 @@ lives=3
 score = 0
 #========loop principal========
 while condicao_jogo<3:
+    
     if condicao_jogo == 0:
         # Carrega a música de fundo
         pygame.mixer.music.load('sons/musica_ofc.mp3')
@@ -749,6 +750,11 @@ while condicao_jogo<3:
             if event.type == pygame.QUIT:
                 state = DONE
                 condicao_jogo=5
+            if event.type==pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                   window = pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN) 
+                if event.key == pygame.K_0:
+                    window = pygame.display.set_mode((WIDTH,HEIGHT)) 
 
         # Captura as teclas pressionadas uma vez por frame
         keys = pygame.key.get_pressed()
