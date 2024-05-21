@@ -204,6 +204,8 @@ def tela_fim(window):
         window.blit(texto_inicio, inicio_rect)
         window.blit(instrucao, instrucao_rect)
 
+        pygame.display.update()
+
 def iniciar_jogo():
     global all_sprites, all_bricks, all_bricks_2, all_bricks_2_1, all_bricks_3, all_bricksT
     global all_balls, all_powers, all_bullets, bar, ball, score, lives, state, FPS
