@@ -2,6 +2,7 @@
 Título - BreakOut Insper
 Membros - Matheus Mizrahi, Francisco Aires Dias e Theo Ribeiro França
 Explicação - Para utilizar o jogo, apenas é nescessário que o usuário tenha baixado no computador o pygame. Após essa instalação, apenas é nescessário que o usuário rode o arquivo jogo.py
+instruções - as setas para a direita e esquerda controlam a barra, e as teclas "0" e "1" diminuem e aumentam a tela, respectivamente
 Bibliográfia:
 musica 1 - https://www.youtube.com/watch?v=dQw4w9WgXcQ
 musica 3 - https://www.youtube.com/watch?v=FHuD5y-PZM0
