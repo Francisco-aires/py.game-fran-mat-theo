@@ -303,6 +303,7 @@ class PowerUp(pygame.sprite.Sprite):
 
 
 def apply_power(power):
+    timer.activate_power(power.effect)
     global bar, lives, ball
     power_duration = 300  # Duração do poder em frames (por exemplo, 5 segundos a 60 FPS)
     if power.effect == 'expand_bar':
@@ -323,7 +324,50 @@ def apply_power(power):
         bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 0.5, BAR_HEIGHT))
         bar.rect = bar.image.get_rect(center=bar.rect.center)
         bar.power_timer = power_duration
+    
+class Timer:
+    def __init__(self):
+        self.power_timers = {}
 
+    def update_powers(self):
+        current_time = pygame.time.get_ticks()
+        for power, end_time in list(self.power_timers.items()):
+            if current_time > end_time:
+                self.deactivate_power(power)
+                del self.power_timers[power]
+
+    def activate_power(self, power):
+        current_time = pygame.time.get_ticks()
+        duration = 5000  # Duração de 5 segundos para todos os poderes
+        end_time = current_time + duration
+        self.power_timers[power] = end_time
+
+        if power == 'expand_bar':
+            bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 1.5, BAR_HEIGHT))
+            bar.rect = bar.image.get_rect(center=bar.rect.center)
+        elif power == 'extra_life':
+            global lives
+            lives += 1
+        elif power == 'slow_ball':
+            ball.speedx *= 0.8
+            ball.speedy *= 0.5
+        elif power == 'fast_ball':
+            ball.speedx *= 1.5
+            ball.speedy *= 1.5
+        elif power == 'd_bar':
+            bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 0.5, BAR_HEIGHT))
+            bar.rect = bar.image.get_rect(center=bar.rect.center)
+
+    def deactivate_power(self, power):
+        if power == 'expand_bar' or power == 'd_bar':
+            bar.image = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
+            bar.rect = bar.image.get_rect(center=bar.rect.center)
+        elif power == 'slow_ball':
+            ball.speedx /= 0.8
+            ball.speedy /= 0.5
+        elif power == 'fast_ball':
+            ball.speedx /= 1.5
+            ball.speedy /= 1.5
 
 
 class Brick(pygame.sprite.Sprite):
@@ -597,7 +641,7 @@ class Bullets(pygame.sprite.Sprite):
             self.kill()
 
 
-
+timer = Timer()
 
 game=True
 
@@ -728,6 +772,9 @@ while condicao_jogo<3:
         bar.update(keys) # Atualiza a posição da barra com base nas entradas do teclado
         ball.update() #bolinha movendoo
         all_powers.update()
+
+
+        timer.update_powers()
         #verifica se houve colisão
         # colizao da bolinha X bloco
         
