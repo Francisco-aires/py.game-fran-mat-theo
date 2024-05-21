@@ -263,6 +263,50 @@ lista_brick_roxo=[10,18,25]
 
 ######################### poderessssss  ########################
 
+class Ball(pygame.sprite.Sprite):
+    def __init__(self, img,bar_x,condicao_jogo):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img  # Define a imagem da bola
+        self.rect = self.image.get_rect()
+        self.rect.x = bar_x
+        self.rect.y = 500
+        self.mask = pygame.mask.from_surface(self.image)
+        self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
+        self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
+        if condicao_jogo<=1:
+            self.speedx = 0 # velocidade inicial
+            self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
+        elif condicao_jogo==2:
+            self.speedx = 0 # velocidade inicial
+            self.speedy = 7  # Velocidade negativa para mover a bola para cima inicialmente
+
+        self.condicao_hit_ball_bar=0
+
+    def update (self):
+        # Atualiza as posições reais com as velocidades
+        self.real_x += self.speedx
+        self.real_y += self.speedy
+        # Atualiza as posições do retângulo com valores inteiros
+        self.rect.x = int(self.real_x)
+        self.rect.y = int(self.real_y)        
+        # Rebate nos ladosss
+        if self.rect.right > WIDTH or self.rect.left < 0:
+            self.speedx = -self.speedx
+        # Rebate a bola na borda superior
+        if self.rect.top < 0:
+            self.speedy = -self.speedy
+        # nao sei o que fazer no chao
+        if self.rect.bottom > HEIGHT: # teleportando pro inicio
+            self.rect.x =bar.rect.centerx
+            self.rect.y = 500
+            if condicao_jogo<=1:
+                self.speedx = 0 # velocidade inicial
+                self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
+            elif condicao_jogo==2:
+                self.speedx = 0 # velocidade inicial
+                self.speedy = 7  # Velocidade negativa para mover a bola para cima inicialmente
+            self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
+            self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
 
 
 class PowerUp(pygame.sprite.Sprite):
@@ -304,10 +348,18 @@ def apply_power(power):
         bar.image = pygame.transform.scale(bar.image, (BAR_WIDHTH * 0.5, BAR_HEIGHT))
         bar.rect = bar.image.get_rect(center=bar.rect.center)
         bar.power_timer = power_duration
-    
+
+ball_speed_x0=0
+ball_speed_y0=0
+
+
+
 class Timer:
-    def __init__(self):
+    def __init__(self,ball):
         self.power_timers = {}
+
+    ball_speed_x0=ball.speedx
+    ball_speed_y0=ball.speedy
 
     def update_powers(self):
         current_time = pygame.time.get_ticks()
@@ -329,8 +381,8 @@ class Timer:
             global lives
             lives += 1
         elif power == 'slow_ball':
-            ball.speedx *= 0.8
-            ball.speedy *= 0.5
+            ball.speedx *= 2
+            ball.speedy *= 1.5
         elif power == 'fast_ball':
             ball.speedx *= 1.5
             ball.speedy *= 1.5
@@ -343,11 +395,11 @@ class Timer:
             bar.image = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
             bar.rect = bar.image.get_rect(center=bar.rect.center)
         elif power == 'slow_ball':
-            ball.speedx /= 0.8
-            ball.speedy /= 0.5
+            ball.speedx=ball_speed_x0
+            ball.speedy =ball_speed_y0
         elif power == 'fast_ball':
-            ball.speedx /= 1.5
-            ball.speedy /= 1.5
+            ball.speedx=ball_speed_x0
+            ball.speedy =ball_speed_y0
 
 
 class Brick(pygame.sprite.Sprite):
@@ -438,51 +490,6 @@ class Brick3(pygame.sprite.Sprite):
     def update(self):
         self.rect.x=self.rect.x  #  ((compoletar função update))
 
-
-class Ball(pygame.sprite.Sprite):
-    def __init__(self, img,bar_x,condicao_jogo):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = img  # Define a imagem da bola
-        self.rect = self.image.get_rect()
-        self.rect.x = bar_x
-        self.rect.y = 500
-        self.mask = pygame.mask.from_surface(self.image)
-        self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
-        self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
-        if condicao_jogo<=1:
-            self.speedx = 0 # velocidade inicial
-            self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
-        elif condicao_jogo==2:
-            self.speedx = 0 # velocidade inicial
-            self.speedy = 7  # Velocidade negativa para mover a bola para cima inicialmente
-
-        self.condicao_hit_ball_bar=0
-
-    def update (self):
-        # Atualiza as posições reais com as velocidades
-        self.real_x += self.speedx
-        self.real_y += self.speedy
-        # Atualiza as posições do retângulo com valores inteiros
-        self.rect.x = int(self.real_x)
-        self.rect.y = int(self.real_y)        
-        # Rebate nos ladosss
-        if self.rect.right > WIDTH or self.rect.left < 0:
-            self.speedx = -self.speedx
-        # Rebate a bola na borda superior
-        if self.rect.top < 0:
-            self.speedy = -self.speedy
-        # nao sei o que fazer no chao
-        if self.rect.bottom > HEIGHT: # teleportando pro inicio
-            self.rect.x =bar.rect.centerx
-            self.rect.y = 500
-            if condicao_jogo<=1:
-                self.speedx = 0 # velocidade inicial
-                self.speedy = 5  # Velocidade negativa para mover a bola para cima inicialmente
-            elif condicao_jogo==2:
-                self.speedx = 0 # velocidade inicial
-                self.speedy = 7  # Velocidade negativa para mover a bola para cima inicialmente
-            self.real_x = float(self.rect.x)  # Posição X real como ponto flutuante
-            self.real_y = float(self.rect.y)  # Posição Y real como ponto flutuante
        
 
 
@@ -547,8 +554,9 @@ class Powers(pygame.sprite.Sprite):
 
     def power_up(self, dic_power_numeros):
         return dic_power_numeros[self.power_type]
+
    
-class Timer:
+('''class Timer:
     def __init__(self):
         self.power_timers = {}
 
@@ -602,7 +610,7 @@ class Timer:
             self.BAR_WIDTH = 200
         elif power == 48:
             for bullet in all_bullets:
-                bullet.kill()
+                bullet.kill() ''')
 
 
                     
@@ -909,10 +917,9 @@ while condicao_jogo<3:
         
 
     if condicao_jogo==3:
-        print ('entrou no if')
-        
         if tela_fim(window)=='REINCIAR':
             condicao_jogo=0
+
        
         
             
