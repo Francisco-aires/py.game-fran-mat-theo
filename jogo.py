@@ -245,12 +245,11 @@ def iniciar_jogo():
 
 ############### carregar sons #####################
 # Carrega o som de colisão
-som_colisao = pygame.mixer.Sound('sons/efeito sono - 1716236286028 (online-audio-converter.com)')
+som_colisao = pygame.mixer.Sound('sons/efeito sono - 1716236286028 (online-audio-converter.com).mp3')
 #        som_colisao.play() se quiser tocar
 
 # Carrega a música de fundo
-pygame.mixer.music.load('sons/name.mp3')
-pygame.mixer.music.load('sons/Star Wars - Battle of the Heroes.mp3')
+
 
 
 #---------- Inicia estrutura de dados
@@ -267,9 +266,12 @@ lista_y3=[30,60,90,120,150,180,210]
 lista_xy_niveis=[[lista_x,lista_y],[lista_x2,lista_y2],[lista_x3,lista_y3]]
 lista_bricks=[]#lista com a posição de todos os blocos
 ######################## Backgrounds #####################
-background_1 = pygame.image.load('img/pngtree-landscape-with-mountains-forest-and-clouds-2d-game-background-image_13246432').convert()
-background_2 = pygame.image.load('img/background-2').convert()
-background_3 = pygame.image.load('img/background-3').convert()
+background_1 = pygame.image.load('img/pngtree-landscape-with-mountains-forest-and-clouds-2d-game-background-image_13246432.jpg').convert()
+background_1 =pygame.transform.scale(background_1, (WIDTH, HEIGHT))
+background_2 = pygame.image.load('img/background-2.png').convert()
+background_2 =pygame.transform.scale(background_2, (WIDTH, HEIGHT))
+background_3 = pygame.image.load('img/background-3.jpg').convert()
+background_3 =pygame.transform.scale(background_3, (WIDTH, HEIGHT))
 #Lista número de cada tipo de bloco
 lista_brick_azul=[36,20,6]
 lista_brick_vermelho=[10,18,25]
@@ -600,7 +602,6 @@ all_bullets = pygame.sprite.Group()
 tela_inicio(window)
 
 # Inicia a reprodução da música de fundo em loop
-pygame.mixer.music.play(-1)
 
 # Variável que ajusta velocidde[
 clock = pygame.time.Clock()
@@ -619,6 +620,17 @@ lives=3
 score = 0
 #========loop principal========
 while condicao_jogo<3:
+    if condicao_jogo == 0:
+        # Carrega a música de fundo
+        pygame.mixer.music.load('sons/name.mp3')
+        # Inicia a reprodução da música de fundo em loop
+        pygame.mixer.music.play(-1)
+    if condicao_jogo == 2:
+        # Carrega a música de fundo
+        pygame.mixer.music.load('sons/Star Wars - Battle of the Heroes.mp3')
+        # Inicia a reprodução da música de fundo em loop
+        pygame.mixer.music.play(-1)
+
     lista_bricks=[]
     
     if state==GAMEOVER:
@@ -786,6 +798,13 @@ while condicao_jogo<3:
 
         # ----- Gera saídas
         window.fill((0,0,0))
+        #backgrounds
+        if condicao_jogo == 0:
+            window.blit(background_1, (0,0))
+        if condicao_jogo == 1:
+            window.blit(background_2, (0,0)) 
+        if condicao_jogo == 2:
+            window.blit(background_3, (0,0))  
         # esta linha é para desenhar a barra
         window.blit(bar.image, bar.rect)
         # Adicione aqui o desenho da bola # adcionei
