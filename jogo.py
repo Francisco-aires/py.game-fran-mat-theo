@@ -126,16 +126,16 @@ def check_collision(ball, brick):
         if min(overlap_left, overlap_right) < min(overlap_top, overlap_bottom):
             # Colisão lateral
             if overlap_left < overlap_right:
-                ball.rect.right = brick_left
+                ball.rect.right = brick_left - 1
             else:
-                ball.rect.left = brick_right
+                ball.rect.left = brick_right + 1
             ball.speedx = -ball.speedx
         else:
             # Colisão superior ou inferior
             if overlap_top < overlap_bottom:
-                ball.rect.bottom = brick_top
+                ball.rect.bottom = brick_top - 1
             else:
-                ball.rect.top = brick_bottom
+                ball.rect.top = brick_bottom + 1
             ball.speedy = -ball.speedy
 
         return True
@@ -917,7 +917,6 @@ while condicao_jogo<3:
         
 
     if condicao_jogo==3:
-        print ('entrou no if')
         
         if tela_fim(window)=='REINCIAR':
             condicao_jogo=0
