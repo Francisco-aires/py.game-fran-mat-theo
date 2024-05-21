@@ -187,7 +187,7 @@ def tela_fim(window):
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                return False
+                return 'REINICIAR'
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
         font = pygame.font.Font(None, 36)  # Define a fonte
@@ -277,9 +277,9 @@ background_2 =pygame.transform.scale(background_2, (WIDTH, HEIGHT))
 background_3 = pygame.image.load('img/background-3.jpg').convert()
 background_3 =pygame.transform.scale(background_3, (WIDTH, HEIGHT))
 #Lista número de cada tipo de bloco
-lista_brick_azul=[36,20,6]
-lista_brick_vermelho=[10,18,25]
-lista_brick_roxo=[10,18,25]
+lista_brick_azul=[36,20,54]
+lista_brick_vermelho=[10,18,1]
+lista_brick_roxo=[10,18,1]
 
 ######################### poderessssss  ########################
 
@@ -865,16 +865,27 @@ while condicao_jogo<3:
         if len(all_bricksT)==0:
             state=NEXTLEVEL
             condicao_jogo+=1
+            if condicao_jogo==3:
+                state=GAMEOVER
 
         if lives==0:
             state = GAMEOVER
             if tela_Gameover(window) != "REINICIAR":
                 condicao_jogo=5
-        if condicao_jogo==3:
-            if tela_fim(window)==False:
-                condicao_jogo=0
-                state=PLAYING
             
+        
+
+    if condicao_jogo==3:
+        print ('entrou no if')
+        
+        if tela_fim(window)=='REINCIAR':
+            condicao_jogo=0
+        else:
+            pygame.quit()
+        
+            
+
+                
 #======Finalização=======
 
 
