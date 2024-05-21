@@ -270,11 +270,11 @@ lista_y3=[30,60,90,120,150,180,210]
 lista_xy_niveis=[[lista_x,lista_y],[lista_x2,lista_y2],[lista_x3,lista_y3]]
 lista_bricks=[]#lista com a posição de todos os blocos
 ######################## Backgrounds #####################
-background_1 = pygame.image.load('img/pngtree-landscape-with-mountains-forest-and-clouds-2d-game-background-image_13246432.jpg').convert()
+background_1 = pygame.image.load('img/background-1.jpg').convert()
 background_1 =pygame.transform.scale(background_1, (WIDTH, HEIGHT))
 background_2 = pygame.image.load('img/background-2.png').convert()
 background_2 =pygame.transform.scale(background_2, (WIDTH, HEIGHT))
-background_3 = pygame.image.load('img/background-3.jpg').convert()
+background_3 = pygame.image.load('img/background-lava.jpg').convert()
 background_3 =pygame.transform.scale(background_3, (WIDTH, HEIGHT))
 #Lista número de cada tipo de bloco
 lista_brick_azul=[36,20,6]
