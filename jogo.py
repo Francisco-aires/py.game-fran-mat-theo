@@ -83,6 +83,16 @@ power_d_bar_img = pygame.transform.scale(power_d_bar_img, (POWER_WIDTH, POWER_HE
 tela_inicial=pygame.image.load('Img/Breakout Insper.png').convert_alpha()
 tela_inicial= pygame.transform.scale(tela_inicial, (WIDTH, HEIGHT))
 
+#Tela game over
+tela_gameover=pygame.image.load('Img/GAme Over.png').convert_alpha()
+tela_gameover= pygame.transform.scale(tela_gameover, (WIDTH, HEIGHT))
+
+#Tela fim (vitória)
+tela_fim=pygame.image.load('Img/GAme Ove.png').convert_alpha()
+tela_fim= pygame.transform.scale(tela_fim, (WIDTH, HEIGHT))
+
+
+
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
     running = True
