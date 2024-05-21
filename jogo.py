@@ -724,6 +724,7 @@ while condicao_jogo<3:
         
         hits_ball_brick = pygame.sprite.groupcollide(all_balls, all_bricks, False, True, pygame.sprite.collide_mask)
         for ball, bricks_hit in hits_ball_brick.items():
+            som_colisao.play()
             for brick in bricks_hit:
                 if check_collision(ball, brick):
                     score += 100
@@ -744,6 +745,7 @@ while condicao_jogo<3:
 
         hits_ball_brick3 = pygame.sprite.groupcollide(all_balls, all_bricks_3, False, True, pygame.sprite.collide_mask)
         for ball, bricks_hit3 in hits_ball_brick3.items():
+            som_colisao.play()
             for brick in bricks_hit3:
                 if check_collision(ball, brick):
                     score += 100
@@ -765,6 +767,7 @@ while condicao_jogo<3:
 
         hits_ball_brick_2_1 = pygame.sprite.groupcollide(all_balls, all_bricks_2_1, False, True, pygame.sprite.collide_mask)
         for ball, bricks_hit in hits_ball_brick_2_1.items():
+            som_colisao.play()
             for brick in bricks_hit:
                 if check_collision(ball, brick):
                     score += 300
