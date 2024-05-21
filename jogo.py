@@ -390,8 +390,8 @@ class Timer:
             bar.image = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
             bar.rect = bar.image.get_rect(center=bar.rect.center)
         elif power == 'slow_ball':
-            ball.speedx/=0.8
-            ball.speedy /=0.8
+            ball.speedx*=2
+            ball.speedy *=2
         elif power == 'fast_ball':
             ball.speedx/=1.2
             ball.speedy/=1.2
@@ -551,62 +551,6 @@ class Powers(pygame.sprite.Sprite):
         return dic_power_numeros[self.power_type]
 
    
-('''class Timer:
-    def __init__(self):
-        self.power_timers = {}
-
-    def update_powers(self):
-        current_time = pygame.time.get_ticks()
-        for power, end_time in list(self.power_timers.items()):
-            if current_time > end_time:
-                self.deactivate_power(power)
-                del self.power_timers[power]
-
-    def activate_power(self, power):
-        current_time = pygame.time.get_ticks()
-        duration = 5000  # Duração de 5 segundos para todos os poderes
-        end_time = current_time + duration
-        self.power_timers[power] = end_time
-
-        if power == 41:
-            self.FPS = 45
-        elif power == 42:
-            self.FPS = 75
-        elif power == 43:
-            for _ in range(2):
-                ball = Ball(ball_img)  # Assumindo que você tem a imagem da bola definida
-                all_sprites.add(ball)
-                all_balls.add(ball)
-        elif power == 44:
-            pygame.sprite.groupcollide(all_balls, all_bricks_2, False, True, pygame.sprite.collide_mask)
-        elif power == 45:
-            pygame.sprite.groupcollide(all_balls, all_bricks, False, False, pygame.sprite.collide_mask)
-        elif power == 46:
-            self.BAR_WIDTH = 175
-        elif power == 47:
-            self.BAR_WIDTH = 225
-        elif power == 48:
-            brick_center = brick.rect.centerx  # Supondo que você tem o brick definido
-            brick_bottom = brick.rect.bottom
-            bullet = Bullets(bullets_img, brick_center, brick_bottom)  # Assumindo que você tem a imagem do bullet definida
-            all_sprites.add(bullet)
-            all_bullets.add(bullet)
-
-    def deactivate_power(self, power):
-        if power == 41 or power == 42:
-            self.FPS = 60
-        elif power == 43:
-            while len(all_balls) > 1:
-                ball = all_balls.sprites()[0]
-                ball.kill()
-        elif power == 44 or power == 45:
-            pygame.sprite.groupcollide(all_balls, all_bricks_2, False, False, pygame.sprite.collide_mask)
-        elif power == 46 or power == 47:
-            self.BAR_WIDTH = 200
-        elif power == 48:
-            for bullet in all_bullets:
-                bullet.kill() ''')
-
 
                     
 class Bullets(pygame.sprite.Sprite):
