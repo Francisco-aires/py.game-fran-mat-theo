@@ -388,7 +388,7 @@ class Timer:
     def deactivate_power(self, power):
         if power == 'expand_bar' or power == 'd_bar':
             bar.image = pygame.transform.scale(bar_img, (BAR_WIDHTH, BAR_HEIGHT))
-            bar.rect = bar.image.get_rect(center=bar.rect.center)
+            bar.rect = bar. image.get_rect(center=bar.rect.center)
         elif power == 'slow_ball':
             ball.speedx*=2
             ball.speedy *=2
