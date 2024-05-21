@@ -88,7 +88,7 @@ def tela_inicio(window):
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                running = False
+                return "REINICIAR"
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
         font = pygame.font.Font(None, 36)  # Define a fonte
@@ -187,7 +187,7 @@ def tela_fim(window):
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                return 'REINICIAR'
+                return 'REINCIAR'
 
         window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
         font = pygame.font.Font(None, 36)  # Define a fonte
