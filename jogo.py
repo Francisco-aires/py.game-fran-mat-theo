@@ -12,7 +12,7 @@ pygame.init()
 #---------- Gera tela principal
 WIDTH=850
 HEIGHT=600
-window = pygame.display.set_mode((WIDTH,HEIGHT))
+window = pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN) 
 pygame.display.set_caption('BREAKOUT INSPER')
 
 
@@ -79,6 +79,10 @@ power_fast_ball_img = pygame.transform.scale(power_fast_ball_img, (POWER_WIDTH, 
 power_d_bar_img = pygame.image.load('Img/46-Breakout-Tiles.png').convert_alpha()
 power_d_bar_img = pygame.transform.scale(power_d_bar_img, (POWER_WIDTH, POWER_HEIGHT))
 
+#Tela inicial
+tela_inicial=pygame.image.load('Img/Breakout Insper.png').convert_alpha()
+tela_inicial= pygame.transform.scale(tela_inicial, (WIDTH, HEIGHT))
+
 # telinhaaaa de inicio funçao
 def tela_inicio(window):
     running = True
@@ -90,20 +94,8 @@ def tela_inicio(window):
             if event.type == pygame.KEYDOWN:
                 running = False
 
-        window.fill((0, 0, 0))  # Define a cor de fundo da tela de início
-        font = pygame.font.Font(None, 36)  # Define a fonte
-
-        # Cria um texto de boas-vindas
-        texto_inicio = font.render('Bem-vindo ao BREAKOUT INSPER!', True, ((255, 255, 255)))
-        inicio_rect = texto_inicio.get_rect(center=(WIDTH / 2, HEIGHT / 3))
-
-        # Cria um texto de instrução
-        instrucao = font.render('Pressione qualquer tecla para começar', True, ((255, 255, 255)))
-        instrucao_rect = instrucao.get_rect(center=(WIDTH / 2, HEIGHT / 2))
-
-        # Desenha os textos na tela
-        window.blit(texto_inicio, inicio_rect)
-        window.blit(instrucao, instrucao_rect)
+        window.blit(tela_inicial,(0,0))
+       
 
         pygame.display.update()  # Atualiza a tela para mostrar os textos
 
