@@ -274,12 +274,12 @@ background_1 = pygame.image.load('img/background-1.jpg').convert()
 background_1 =pygame.transform.scale(background_1, (WIDTH, HEIGHT))
 background_2 = pygame.image.load('img/background-2.png').convert()
 background_2 =pygame.transform.scale(background_2, (WIDTH, HEIGHT))
-background_3 = pygame.image.load('img/background-3.jpg').convert()
+background_3 = pygame.image.load('img/background-lava.jpg').convert()
 background_3 =pygame.transform.scale(background_3, (WIDTH, HEIGHT))
 #Lista número de cada tipo de bloco
-lista_brick_azul=[36,20,54]
-lista_brick_vermelho=[10,18,1]
-lista_brick_roxo=[10,18,1]
+lista_brick_azul=[36,20,6]
+lista_brick_vermelho=[10,18,25]
+lista_brick_roxo=[10,18,25]
 
 ######################### poderessssss  ########################
 
