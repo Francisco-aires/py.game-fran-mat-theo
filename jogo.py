@@ -587,7 +587,7 @@ NEXTLEVEL=3
 state = PLAYING
 
 condicao_jogo=0
-condicao_jogo=2
+condicao_jogo=0
 
 lives=3
 score = 0
