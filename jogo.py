@@ -803,6 +803,8 @@ while condicao_jogo<3:
             state = GAMEOVER
             if tela_Gameover(window) != "REINICIAR":
                 condicao_jogo=5
+            else:
+                condicao_jogo=0
             
         
     if condicao_jogo==3:
