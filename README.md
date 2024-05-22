@@ -9,3 +9,5 @@ efeitos sonoros - https://pixabay.com/pt/sound-effects/search/brick/
 background 1 - https://www.istockphoto.com/br/ilustra%C3%A7%C3%B5es/video-game-background
 background 2 -https://pngtree.com/freebackground/cartoon-style-seamless-game-interface-top-view-of-stone-textured-ground-with-soil_15305019.html
 background 3 - https://www.artstation.com/artwork/Bm0x49?album_id=1793847 
+
+video, entra na pasta 'video explicando o jogo. La esta o video.
